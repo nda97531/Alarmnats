@@ -1,5 +1,6 @@
 package com.e15.alarmnats;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,22 @@ import com.e15.alarmnats.ActivityController.AlarmFiredActivity;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        System.out.println("receive @@");
 
+        try {
+            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+                ring(context, intent);
+            }
+        } catch (NullPointerException e) {
+            ring(context, intent);
+        }
+    }
+
+    private void ring(Context context, Intent intent) {
         String ringtone = intent.getStringExtra("ringtoneUri");
         String alarmTime = intent.getStringExtra("alarmTime");
+
+        System.out.println("time here: " + alarmTime);
 
         Log.d("ringtone", ringtone);
 

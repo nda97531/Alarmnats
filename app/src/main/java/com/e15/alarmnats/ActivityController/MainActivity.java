@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         getAlarms();
 
         // intent to pass to broadcast receiver
+        System.out.println("ringgg!!!");
         alarmIntent = new Intent(this, AlarmReceiver.class);
 
         addAlarmButton = findViewById(R.id.addAlarmButton);
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SET_ALARM_INTENET_REQUEST_CODE) {
+
                 String time = data.getStringExtra("timeString");
                 long millis = data.getLongExtra("timeInMillis", 0);
                 String label = data.getStringExtra("label");
@@ -96,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     // create new alarm
     private void setAlarm(String time, long timeInMillis, String label, String ringtoneUri, String ringtoneName, int flag) {

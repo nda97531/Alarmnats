@@ -13,8 +13,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,20 +28,21 @@ import com.e15.alarmnats.TimePickerFragment;
 
 import java.util.Calendar;
 
-public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
 
     // declare variables
     private TextView textViewTimePicker;
     private Button ringtonePickerButton;
     private EditText label;
     private Button setAlarmButton;
+    private Spinner question_spinner;
 
     private Calendar calendar;
 
     private Uri ringtoneUri;
     private String ringtoneName;
 
-    private Intent alarmIntent;
+    private Intent receiverIntent;
     private PendingIntent pendingIntent;
 
     private static final int RINGTONE_REQUEST_CODE = 1;
@@ -57,8 +61,9 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         // calendar instance
         calendar = Calendar.getInstance();
 
-        // alarmIntent
-        alarmIntent = new Intent(this, AlarmReceiver.class);
+        // receiverIntent
+        receiverIntent = new Intent(this, AlarmReceiver.class);
+        receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
 
         // ringtone
         ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -83,8 +88,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             }
         });
 
-
-        // set alarm
+        // SET ALARM
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,36 +96,77 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 String time = (String) textViewTimePicker.getText();
                 String labelText = label.getText().toString();
 
-                // alarm manager
+                // SET ALARM MANAGER
+                setPendingIntent();
+
+                int hour = Integer.parseInt(time.split(":")[0]);
+                int min = Integer.parseInt(time.split(":")[1]);
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE, min);
+
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
-                Intent intent = new Intent();
-                intent.putExtra("timeString", time);
-                intent.putExtra("timeInMillis", calendar.getTimeInMillis());
-                intent.putExtra("label", labelText);
-                intent.putExtra("ringtoneUri", ringtoneUri.toString());
-                intent.putExtra("ringtoneName", ringtoneName);
-                intent.putExtra("flags", (int) calendar.getTimeInMillis());
+                /// send result to mainActivity
+                Intent intentReturnToMain = new Intent();
+                intentReturnToMain.putExtra("timeString", time);
+                intentReturnToMain.putExtra("timeInMillis", calendar.getTimeInMillis());
+                intentReturnToMain.putExtra("label", labelText);
+                intentReturnToMain.putExtra("ringtoneUri", ringtoneUri.toString());
+                intentReturnToMain.putExtra("ringtoneName", ringtoneName);
+                intentReturnToMain.putExtra("flags", (int) calendar.getTimeInMillis());
 
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK, intentReturnToMain);
 
                 Toast.makeText(SetAlarmActivity.this, "Alarm is set for " + time, Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
+
+        //initialize the question spinner
+        question_spinner = (Spinner) findViewById(R.id.question_spinner);
+        question_spinner.setOnItemSelectedListener(this);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter
+                = ArrayAdapter.createFromResource(this, R.array.question_list, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        question_spinner.setAdapter(adapter);
+    }
+
+    // create pending intent
+    private void setPendingIntent() {
+        final int _id = (int) calendar.getTimeInMillis();
+        this.pendingIntent = PendingIntent.getBroadcast(this, _id, receiverIntent, pendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    //spinner callback
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selected = (String) question_spinner.getSelectedItem();
+
+        if (selected.equals(getString(R.string.qr_question))) {
+
+        } else if (selected.equals(getString(R.string.math_question))) {
+            System.out.println("math questionn");
+        }
+    }
+
+    //spinner callback
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     // time set callback
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         textViewTimePicker.setText(hourOfDay + ":" + minute);
+        System.out.println("set time callback");
 
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        alarmIntent.putExtra("alarmTime", textViewTimePicker.getText());
+        receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
     }
 
     // result from activity for ringtone picker
@@ -142,20 +187,15 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
         ringtonePickerButton.setText(ringtoneName);
 
-        alarmIntent.putExtra("ringtoneUri", ringtoneUri.toString());
+        receiverIntent.putExtra("ringtoneUri", ringtoneUri.toString());
 
-        setPendingIntent();
     }
 
-    // create pending intent
-    private void setPendingIntent() {
-        final int _id = (int) calendar.getTimeInMillis();
-        pendingIntent = PendingIntent.getBroadcast(this, _id, alarmIntent, 0);
-    }
+
 
 //    public void cancelAlarm(int flag) {
-//        alarmIntent = new Intent(this, AlarmReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(this, flag, alarmIntent, 0);
+//        receiverIntent = new Intent(this, AlarmReceiver.class);
+//        pendingIntent = PendingIntent.getBroadcast(this, flag, receiverIntent, 0);
 //
 //        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.cancel(pendingIntent);

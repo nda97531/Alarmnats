@@ -13,16 +13,12 @@ public class Alarm {
     private String label;
     private int flag;
 
+    private String question, answer;
+
     public Alarm() {}
 
-    public Alarm(int _id,
-                 String alarmTime,
-                 long alarmTimeInMillis,
-                 boolean alarmStatus,
-                 String ringtoneName,
-                 Uri ringtoneUri,
-                 String label,
-                 int flag) {
+    public Alarm(int _id, String alarmTime, long alarmTimeInMillis, boolean alarmStatus,
+                 String ringtoneName, Uri ringtoneUri, String label, int flag, String question, String answer) {
         this._id = _id;
         this.alarmTime = alarmTime;
         this.alarmTimeInMillis = alarmTimeInMillis;
@@ -31,6 +27,24 @@ public class Alarm {
         this.ringtoneUri = ringtoneUri;
         this.label = label;
         this.flag = flag;
+        this.question = question;
+        this.answer = answer;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public int get_id() {

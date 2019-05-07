@@ -5,4 +5,15 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    <string name="default_question">Default</string>
+    <string name="qr_question">QR code</string>
+    <string name="math_question">Math problem</string>
+    <string-array name="question_list">
+        <item>@string/default_question</item>
+        <item>@string/qr_question</item>
+        <item>@string/math_question</item>
+    </string-array>
+
 </resources>
