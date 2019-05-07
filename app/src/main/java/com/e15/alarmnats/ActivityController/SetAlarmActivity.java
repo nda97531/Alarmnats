@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.ActivityController;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -18,6 +18,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.e15.alarmnats.AlarmReceiver;
+import com.e15.alarmnats.R;
+import com.e15.alarmnats.TimePickerFragment;
 
 import java.util.Calendar;
 

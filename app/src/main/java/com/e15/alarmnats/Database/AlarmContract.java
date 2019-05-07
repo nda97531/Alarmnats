@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.Database;
 
 public final class AlarmContract {
 

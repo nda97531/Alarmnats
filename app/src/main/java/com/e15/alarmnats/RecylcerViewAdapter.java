@@ -15,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.e15.alarmnats.ActivityController.MainActivity;
+
 import java.util.ArrayList;
 
 public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapter.ViewHolder> {

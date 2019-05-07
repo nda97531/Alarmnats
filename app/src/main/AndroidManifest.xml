@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.e15.alarmnats.SetAlarmActivity"></activity>
-        <activity android:name="com.e15.alarmnats.AlarmFiredActivity"
+        <activity android:name="com.e15.alarmnats.ActivityController.SetAlarmActivity"></activity>
+        <activity
+            android:name="com.e15.alarmnats.ActivityController.AlarmFiredActivity"
             android:excludeFromRecents="true" />
-        <activity android:name="com.e15.alarmnats.MainActivity">
+        <activity android:name="com.e15.alarmnats.ActivityController.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

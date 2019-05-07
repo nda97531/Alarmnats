@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
+
+import com.e15.alarmnats.Model.Alarm;
+import com.e15.alarmnats.Model.Question;
 
 import java.util.ArrayList;
 import java.util.List;

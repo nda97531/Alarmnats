@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.Model;
 
 public class Question {
     private String question;

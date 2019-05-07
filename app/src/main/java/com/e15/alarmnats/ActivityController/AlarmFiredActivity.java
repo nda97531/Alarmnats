@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.ActivityController;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -13,6 +13,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.e15.alarmnats.Database.AlarmDbHelper;
+import com.e15.alarmnats.Model.Question;
+import com.e15.alarmnats.R;
 
 public class AlarmFiredActivity extends AppCompatActivity {
     private TextView textViewQuestion;

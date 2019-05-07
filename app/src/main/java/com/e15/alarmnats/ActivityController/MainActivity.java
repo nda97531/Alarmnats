@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.ActivityController;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import com.e15.alarmnats.Model.Alarm;
+import com.e15.alarmnats.Database.AlarmDbHelper;
+import com.e15.alarmnats.AlarmReceiver;
+import com.e15.alarmnats.R;
+import com.e15.alarmnats.RecylcerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
