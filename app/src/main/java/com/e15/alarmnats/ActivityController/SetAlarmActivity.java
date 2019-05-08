@@ -1,8 +1,10 @@
 package com.e15.alarmnats.ActivityController;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -46,6 +48,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     private PendingIntent pendingIntent;
 
     private static final int RINGTONE_REQUEST_CODE = 1;
+    private String question = "default", answer = "default";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,9 +104,14 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
                 int hour = Integer.parseInt(time.split(":")[0]);
                 int min = Integer.parseInt(time.split(":")[1]);
-                calendar.setTimeInMillis(System.currentTimeMillis());
+//                calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.set(Calendar.HOUR_OF_DAY, hour);
                 calendar.set(Calendar.MINUTE, min);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                if (calendar.getTimeInMillis() < System.currentTimeMillis())
+                    calendar.add(Calendar.DATE, 1);
 
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
@@ -116,6 +124,8 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 intentReturnToMain.putExtra("ringtoneUri", ringtoneUri.toString());
                 intentReturnToMain.putExtra("ringtoneName", ringtoneName);
                 intentReturnToMain.putExtra("flags", (int) calendar.getTimeInMillis());
+                intentReturnToMain.putExtra("question", question);
+                intentReturnToMain.putExtra("answer", answer);
 
                 setResult(RESULT_OK, intentReturnToMain);
 
@@ -148,8 +158,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         String selected = (String) question_spinner.getSelectedItem();
 
         if (selected.equals(getString(R.string.qr_question))) {
+            this.question = "qr";
+            Intent intent = new Intent(this, QRscanActivity.class);
+            startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
 
-        } else if (selected.equals(getString(R.string.math_question))) {
+        } else if (selected.equals(getString(R.string.math_question))) { //continue here
+            this.question = "math";
+            this.answer = "easy";
             System.out.println("math questionn");
         }
     }
@@ -176,6 +191,10 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             if (requestCode == RINGTONE_REQUEST_CODE) {
                 ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 setRingtone(ringtoneUri);
+            } else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
+                this.answer = data.getStringExtra("code");
+                receiverIntent.putExtra("question", this.question);
+                receiverIntent.putExtra("answer", this.answer);
             }
         }
     }

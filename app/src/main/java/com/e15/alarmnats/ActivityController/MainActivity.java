@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent alarmIntent;
 
     private static final int SET_ALARM_INTENET_REQUEST_CODE = 1;
+    public static final int SCAN_QR_CODE_INTENT_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SET_ALARM_INTENET_REQUEST_CODE) {
-
                 String time = data.getStringExtra("timeString");
                 long millis = data.getLongExtra("timeInMillis", 0);
                 String label = data.getStringExtra("label");
@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // create alarm
                 setAlarm(time, millis, label,ringtoneUri,ringtoneName, flag);
-
             }
         }
     }

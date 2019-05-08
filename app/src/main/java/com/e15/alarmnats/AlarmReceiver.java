@@ -1,6 +1,5 @@
 package com.e15.alarmnats;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,13 +25,12 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void ring(Context context, Intent intent) {
         String ringtone = intent.getStringExtra("ringtoneUri");
         String alarmTime = intent.getStringExtra("alarmTime");
-
-        System.out.println("time here: " + alarmTime);
+        String question = intent.getStringExtra("question");
+        String answer = intent.getStringExtra("answer");
 
         Log.d("ringtone", ringtone);
 
         Toast.makeText(context, "Alarm fired", Toast.LENGTH_LONG).show();
-        System.out.println("Alarm Fired");
         Log.i("broadcast receiver", "Alarm Fired");
 
         Intent alarmFiredIntent = new Intent(context, AlarmFiredActivity.class);
@@ -40,6 +38,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmFiredIntent.putExtra("lock", true);
         alarmFiredIntent.putExtra("ringtone", ringtone);
         alarmFiredIntent.putExtra("alarmTime", alarmTime);
+        alarmFiredIntent.putExtra("question", question);
+        alarmFiredIntent.putExtra("answer", answer);
 
         alarmFiredIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

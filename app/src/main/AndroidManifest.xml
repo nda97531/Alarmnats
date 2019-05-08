@@ -3,6 +3,7 @@
     package="com.e15.alarmnats">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -11,11 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.e15.alarmnats.ActivityController.SetAlarmActivity"></activity>
+        <activity android:name=".ActivityController.QRtestActivity"></activity>
+        <activity android:name=".ActivityController.QRscanActivity" />
+        <activity android:name=".ActivityController.SetAlarmActivity" />
         <activity
-            android:name="com.e15.alarmnats.ActivityController.AlarmFiredActivity"
+            android:name=".ActivityController.AlarmFiredActivity"
             android:excludeFromRecents="true" />
-        <activity android:name="com.e15.alarmnats.ActivityController.MainActivity">
+        <activity android:name=".ActivityController.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,16 +26,17 @@
             </intent-filter>
         </activity>
 
-        <!--<receiver-->
-        <!--android:name="com.e15.alarmnats.AlarmReceiver"-->
-        <!--android:enabled="true"-->
-        <!--android:exported="true" />-->
-
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" /> <!-- <receiver -->
+        <!-- android:name="com.e15.alarmnats.AlarmReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" /> -->
         <receiver
-            android:name="com.e15.alarmnats.AlarmReceiver"
+            android:name=".AlarmReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>

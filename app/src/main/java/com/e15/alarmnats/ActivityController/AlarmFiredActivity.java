@@ -1,9 +1,11 @@
 package com.e15.alarmnats.ActivityController;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,15 +77,23 @@ public class AlarmFiredActivity extends AppCompatActivity {
             Log.e("media exception", e.toString());
         }
 
-        textViewQuestion = findViewById(R.id.text_view_question);
-        rbGroup = findViewById(R.id.radio_group);
-        rb1 = findViewById(R.id.radio_button1);
-        rb2 = findViewById(R.id.radio_button2);
-        rb3 = findViewById(R.id.radio_button3);
-        rb4 = findViewById(R.id.radio_button4);
-        buttonConfirm = findViewById(R.id.button_confirm);
+        String question = getIntent().getExtras().getString("question");
+        String answer = getIntent().getExtras().getString("answer");
+        if (question.equals("qr")) {
+            Intent intent = new Intent(this, QRscanActivity.class);
+            intent.putExtra("answer", answer);
+            startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+        } else {
+            textViewQuestion = findViewById(R.id.text_view_question);
+            rbGroup = findViewById(R.id.radio_group);
+            rb1 = findViewById(R.id.radio_button1);
+            rb2 = findViewById(R.id.radio_button2);
+            rb3 = findViewById(R.id.radio_button3);
+            rb4 = findViewById(R.id.radio_button4);
+            buttonConfirm = findViewById(R.id.button_confirm);
 
-        setQuestionDetails();
+            setQuestionDetails();
+        }
 
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +105,15 @@ public class AlarmFiredActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
+                finishActivity();
+            }
+        }
     }
 
     private void setQuestionDetails() {
