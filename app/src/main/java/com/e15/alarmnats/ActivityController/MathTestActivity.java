@@ -34,7 +34,7 @@ public class MathTestActivity extends AppCompatActivity {
         y = randomGenerator.nextInt(500) + 100;
         z = randomGenerator.nextInt(5000) + 100;
 
-        math_question.setText(x + " * " + y + " + " + z);
+        math_question.setText(x + " x " + y + " + " + z + " = ");
     }
 
     protected void submitBtnClick(View view) {

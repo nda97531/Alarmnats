@@ -111,11 +111,16 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
 
-                if (calendar.getTimeInMillis() < System.currentTimeMillis())
+                if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
                     calendar.add(Calendar.DATE, 1);
+                    Toast.makeText(SetAlarmActivity.this, "Delay for 1 day", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SetAlarmActivity.this, "Alarm is set for " + time, Toast.LENGTH_SHORT).show();
+                }
 
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
                 /// send result to mainActivity
                 Intent intentReturnToMain = new Intent();
@@ -130,7 +135,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
                 setResult(RESULT_OK, intentReturnToMain);
 
-                Toast.makeText(SetAlarmActivity.this, "Alarm is set for " + time, Toast.LENGTH_SHORT).show();
+
                 finish();
             }
         });

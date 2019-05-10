@@ -10,30 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.e15.alarmnats.Database.AlarmDbHelper;
-import com.e15.alarmnats.Model.Question;
 import com.e15.alarmnats.R;
 
 public class AlarmFiredActivity extends AppCompatActivity {
-    private TextView textViewQuestion;
-    private RadioGroup rbGroup;
-    private RadioButton rb1;
-    private RadioButton rb2;
-    private RadioButton rb3;
-    private RadioButton rb4;
-    private Button buttonDismiss;
-
-    private AlarmDbHelper dbHelper;
-    private Question question;
+//    private AlarmDbHelper dbHelper;
 
     MediaPlayer mediaPlayer;
-//    private AlarmDbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +35,13 @@ public class AlarmFiredActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        String alarmTime = getIntent().getExtras().getString("alarmTime");
-        dbHelper = AlarmDbHelper.getInstance(this);
-
-//        dbHelper.updateAlarmStatus(alarmTime);
+//        dbHelper = AlarmDbHelper.getInstance(this);
 
         String ringtone = getIntent().getExtras().getString("ringtone");
 
         Log.d("fired", ringtone);
 
         Uri ringtoneUri = Uri.parse(ringtone);
-
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(this, ringtoneUri);
@@ -88,7 +67,7 @@ public class AlarmFiredActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MathTestActivity.class);
             startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else {
-            buttonDismiss = findViewById(R.id.button_dismiss);
+            //Default
         }
     }
 
