@@ -80,7 +80,7 @@ public class AlarmFiredActivity extends AppCompatActivity {
         String question = getIntent().getExtras().getString("question");
         String answer = getIntent().getExtras().getString("answer");
         if (question.equals("qr")) {
-            Intent intent = new Intent(this, QRscanActivity.class);
+            Intent intent = new Intent(this, QRtestActivity.class);
             intent.putExtra("answer", answer);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else {
@@ -93,18 +93,18 @@ public class AlarmFiredActivity extends AppCompatActivity {
             buttonConfirm = findViewById(R.id.button_confirm);
 
             setQuestionDetails();
-        }
 
-        buttonConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked() || rb4.isChecked()) {
-                    checkAnswer();
-                } else {
-                    Toast.makeText(AlarmFiredActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
+            buttonConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked() || rb4.isChecked()) {
+                        checkAnswer();
+                    } else {
+                        Toast.makeText(AlarmFiredActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
