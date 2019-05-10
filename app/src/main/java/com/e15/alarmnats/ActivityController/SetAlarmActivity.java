@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ import java.util.Calendar;
 public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
 
     // declare variables
-    private TextView textViewTimePicker;
+    private TextClock textViewTimePicker;
     private Button ringtonePickerButton;
     private EditText label;
     private Button setAlarmButton;

@@ -27,7 +27,7 @@ public class AlarmFiredActivity extends AppCompatActivity {
     private RadioButton rb2;
     private RadioButton rb3;
     private RadioButton rb4;
-    private Button buttonConfirm;
+    private Button buttonDismiss;
 
     private AlarmDbHelper dbHelper;
     private Question question;
@@ -88,26 +88,7 @@ public class AlarmFiredActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MathTestActivity.class);
             startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else {
-            textViewQuestion = findViewById(R.id.text_view_question);
-            rbGroup = findViewById(R.id.radio_group);
-            rb1 = findViewById(R.id.radio_button1);
-            rb2 = findViewById(R.id.radio_button2);
-            rb3 = findViewById(R.id.radio_button3);
-            rb4 = findViewById(R.id.radio_button4);
-            buttonConfirm = findViewById(R.id.button_confirm);
-
-            setQuestionDetails();
-
-            buttonConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked() || rb4.isChecked()) {
-                        checkAnswer();
-                    } else {
-                        Toast.makeText(AlarmFiredActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            buttonDismiss = findViewById(R.id.button_dismiss);
         }
     }
 
@@ -121,28 +102,8 @@ public class AlarmFiredActivity extends AppCompatActivity {
         }
     }
 
-    private void setQuestionDetails() {
-        rbGroup.clearCheck();
-        question = dbHelper.getAQuestion();
-        textViewQuestion.setText(question.getQuestion());
-        rb1.setText(question.getOption1());
-        rb2.setText(question.getOption2());
-        rb3.setText(question.getOption3());
-        rb4.setText(question.getOption4());
-    }
-
-    private void checkAnswer() {
-
-        RadioButton rbSelected = findViewById(rbGroup.getCheckedRadioButtonId());
-        int answer = rbGroup.indexOfChild(rbSelected) + 1;
-
-        if (answer == question.getAnswer()) {
-            finishActivity();
-        } else {
-            Toast.makeText(this, "Wrong Answer. Please Try Again.", Toast.LENGTH_SHORT).show();
-            setQuestionDetails();
-        }
-
+    protected void onBtnDismissClick(View view) {
+        finishActivity();
     }
 
     private void finishActivity() {

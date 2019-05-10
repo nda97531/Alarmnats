@@ -8,14 +8,13 @@
     android:orientation="vertical"
     tools:context=".ActivityController.SetAlarmActivity">
 
-    <TextView
+    <TextClock
         android:id="@+id/text_view_time_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="60dp"
         android:layout_marginBottom="60dp"
-        android:text="00:00"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Display2" />
 
