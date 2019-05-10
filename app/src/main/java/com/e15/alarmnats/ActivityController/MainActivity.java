@@ -1,5 +1,8 @@
 package com.e15.alarmnats.ActivityController;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     // get result from new alarm activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        adapter.onActivityResult(requestCode, resultCode, data);
+        adapter.onRecAdapterActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SET_ALARM_INTENET_REQUEST_CODE) {
                 String time = data.getStringExtra("timeString");
@@ -140,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
             mLabels.add(alarm.getLabel());
             mFlags.add(alarm.getFlag());
         }
-
         initRecyclerView();
     }
 
@@ -161,16 +163,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // delete alarm
-    public void deleteAlarm(String timeInMillis, int position) {
+    public void deleteAlarm(int flag, int position) {
         Log.d("main", "before if");
-        if (dbHelper.deleteAlarm(timeInMillis)) {
+        if (dbHelper.deleteAlarm(flag)) {
             Log.d("main", "row deleted");
-//            cancelAlarm(mFlags.get(position));
+            cancelAlarm(mFlags.get(position));
             getAlarms();
         }
     }
 
-//    public void cancelAlarm(int flag) {
-//
-//    }
+    // cancel Alarm Intent
+    public void cancelAlarm(int flag) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+    }
 }

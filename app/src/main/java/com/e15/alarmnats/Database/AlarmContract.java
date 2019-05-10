@@ -20,5 +20,4 @@ public final class AlarmContract {
         public static final String COLUMN_QUESTION = "question";
         public static final String COLUMN_ANSWER = "answer";
     }
-
 }

@@ -66,7 +66,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         calendar = Calendar.getInstance();
 
         // receiverIntent
-        receiverIntent = new Intent(this, AlarmReceiver.class);
+        receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
 
         // ringtone
@@ -99,9 +99,10 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
                 String time = (String) textViewTimePicker.getText();
                 String labelText = label.getText().toString();
+                int myFlag = (int) (System.currentTimeMillis() / 1000);
 
                 // SET ALARM MANAGER
-                setPendingIntent();
+                setPendingIntent(myFlag);
 
                 int hour = Integer.parseInt(time.split(":")[0]);
                 int min = Integer.parseInt(time.split(":")[1]);
@@ -129,7 +130,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 intentReturnToMain.putExtra("label", labelText);
                 intentReturnToMain.putExtra("ringtoneUri", ringtoneUri.toString());
                 intentReturnToMain.putExtra("ringtoneName", ringtoneName);
-                intentReturnToMain.putExtra("flags", (int) calendar.getTimeInMillis());
+                intentReturnToMain.putExtra("flags", myFlag);
                 intentReturnToMain.putExtra("question", question);
                 intentReturnToMain.putExtra("answer", answer);
 
@@ -153,12 +154,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     }
 
     // create pending intent
-    private void setPendingIntent() {
+    private void setPendingIntent(int flag_id) {
         receiverIntent.putExtra("question", this.question);
         receiverIntent.putExtra("answer", this.answer);
 
-        final int _id = (int) calendar.getTimeInMillis();
-        this.pendingIntent = PendingIntent.getBroadcast(this, _id, receiverIntent, pendingIntent.FLAG_UPDATE_CURRENT);
+        final int _id = (int) (calendar.getTimeInMillis() / 1000);
+        this.pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag_id, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     //spinner callback

@@ -28,6 +28,60 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         this.mCtx = context;
     }
 
+    public void addAlarm(Alarm alarm) {
+        ContentValues cv = new ContentValues();
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
+        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
+        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
+
+        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
+
+        db.insert(AlarmContract.AlarmTable.TABLE_NAME, null, cv);
+    }
+
+    public boolean deleteAlarm(Integer flag) {
+        Log.d("dbhelper", "delete method");
+
+        String where = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
+        String[] whereAgs = new String[]{flag.toString()};
+
+        return db.delete(AlarmContract.AlarmTable.TABLE_NAME, where, whereAgs) > 0;
+    }
+
+    public void updateAlarm(Alarm alarm) {
+        ContentValues cv = new ContentValues();
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
+        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
+        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
+
+        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
+
+        String where = "_ID = ?";
+        String[] whereAgs = new String[]{String.valueOf(AlarmContract.AlarmTable._ID)};
+
+        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
+    }
+
+    public void updateAlarmStatus(String alarmTime) {
+        ContentValues cv = new ContentValues();
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, 0);
+
+        String where = AlarmContract.AlarmTable.COLUMN_ALARM_TIME + " = ?";
+        String[] whereAgs = new String[]{alarmTime};
+
+        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
+    }
+
     public static AlarmDbHelper getInstance(Context ctx) {
         if (mInstance == null) {
             mInstance = new AlarmDbHelper(ctx.getApplicationContext());
@@ -63,51 +117,6 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addAlarm(Alarm alarm) {
-        ContentValues cv = new ContentValues();
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
-        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
-        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
-
-        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
-
-        db.insert(AlarmContract.AlarmTable.TABLE_NAME, null, cv);
-    }
-
-    public void updateAlarm(Alarm alarm) {
-        ContentValues cv = new ContentValues();
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
-        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
-        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
-
-        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
-
-        String where = "id = ?";
-        String[] whereAgs = new String[] {String.valueOf(AlarmContract.AlarmTable._ID)};
-
-        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
-    }
-
-    public void updateAlarmStatus(String alarmTime) {
-        ContentValues cv = new ContentValues();
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, 0);
-
-        String where = AlarmContract.AlarmTable.COLUMN_ALARM_TIME + " = ?";
-        String[] whereAgs = new String[] {alarmTime};
-
-        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
-    }
-
     public List<Alarm> getAllAlarms() {
         List<Alarm> alarmList = new ArrayList<>();
 
@@ -137,15 +146,5 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         c.close();
 
         return alarmList;
-    }
-
-    public boolean deleteAlarm(String alarmTime) {
-        Log.d("dbhelper", "delete method");
-
-        String value = String.valueOf(alarmTime);
-        String where = AlarmContract.AlarmTable.COLUMN_ALARM_TIME + " = ?";
-        String[] whereAgs = new String[] {alarmTime};
-
-        return db.delete(AlarmContract.AlarmTable.TABLE_NAME, where, whereAgs) > 0;
     }
 }

@@ -80,7 +80,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
 
                 if (mContext instanceof MainActivity) {
                     Log.d("delete", "delete button clicked");
-                    ((MainActivity)mContext).deleteAlarm(mAlarmTimes.get(poisition), poisition);
+                    ((MainActivity) mContext).deleteAlarm(mFlags.get(poisition), poisition);
                 }
             }
         });
@@ -95,8 +95,8 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         return mAlarmTimes.size();
     }
 
-    public  void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("MyAdapter", "onActivityResult");
+    public void onRecAdapterActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("MyAdapter", "onRecAdapterActivityResult");
     }
 
 
