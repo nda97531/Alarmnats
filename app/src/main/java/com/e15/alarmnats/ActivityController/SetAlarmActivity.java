@@ -148,6 +148,9 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     // create pending intent
     private void setPendingIntent() {
+        receiverIntent.putExtra("question", this.question);
+        receiverIntent.putExtra("answer", this.answer);
+
         final int _id = (int) calendar.getTimeInMillis();
         this.pendingIntent = PendingIntent.getBroadcast(this, _id, receiverIntent, pendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -157,15 +160,16 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selected = (String) question_spinner.getSelectedItem();
 
-        if (selected.equals(getString(R.string.qr_question))) {
+        if (selected.equals(getString(R.string.default_question))) {
+            this.question = "default";
+            this.answer = "default";
+        } else if (selected.equals(getString(R.string.qr_question))) {
             this.question = "qr";
             Intent intent = new Intent(this, QRscanActivity.class);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
-
         } else if (selected.equals(getString(R.string.math_question))) { //continue here
             this.question = "math";
-            this.answer = "easy";
-            System.out.println("math questionn");
+            this.answer = "default";
         }
     }
 
@@ -193,8 +197,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 setRingtone(ringtoneUri);
             } else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
                 this.answer = data.getStringExtra("code");
-                receiverIntent.putExtra("question", this.question);
-                receiverIntent.putExtra("answer", this.answer);
             }
         }
     }

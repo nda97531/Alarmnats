@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int SET_ALARM_INTENET_REQUEST_CODE = 1;
     public static final int SCAN_QR_CODE_INTENT_REQUEST_CODE = 100;
+    public static final int MATH_TEST_INTENT_REQUEST_CODE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -79,10 +79,14 @@ public class AlarmFiredActivity extends AppCompatActivity {
 
         String question = getIntent().getExtras().getString("question");
         String answer = getIntent().getExtras().getString("answer");
+
         if (question.equals("qr")) {
             Intent intent = new Intent(this, QRtestActivity.class);
             intent.putExtra("answer", answer);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+        } else if (question.equals("math")) {
+            Intent intent = new Intent(this, MathTestActivity.class);
+            startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else {
             textViewQuestion = findViewById(R.id.text_view_question);
             rbGroup = findViewById(R.id.radio_group);
@@ -110,7 +114,8 @@ public class AlarmFiredActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
+            if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE
+                    || requestCode == MainActivity.MATH_TEST_INTENT_REQUEST_CODE) {
                 finishActivity();
             }
         }
