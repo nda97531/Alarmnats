@@ -164,14 +164,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // enable alarm
-    public void enableAlarm(int flag) {
+    public void enableExistingAlarm(int flag) {
         Alarm alarm = dbHelper.getAlarm(flag);
 
         Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         receiverIntent.putExtra("alarmTime", alarm.getAlarmTime());
         receiverIntent.putExtra("question", alarm.getQuestion());
         receiverIntent.putExtra("answer", alarm.getAnswer());
-        receiverIntent.putExtra("ringtoneUri", alarm.getRingtoneUri().toString());
+        receiverIntent.putExtra("ringtoneUri", alarm.getRingtoneUri());
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 

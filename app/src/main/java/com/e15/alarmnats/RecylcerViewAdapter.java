@@ -88,7 +88,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    ((MainActivity) mContext).enableAlarm(mFlags.get(poisition));
+                    ((MainActivity) mContext).enableExistingAlarm(mFlags.get(poisition));
                 } else {
                     ((MainActivity) mContext).cancelAlarm(mFlags.get(poisition), true);// change status when switching on/off
                 }
