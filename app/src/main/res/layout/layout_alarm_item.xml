@@ -20,16 +20,6 @@
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Display2" />
 
-    <Button
-        android:id="@+id/button_edit_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_alarm_time"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="EDIT" />
-
     <TextView
         android:id="@+id/text_view_label"
         android:layout_width="wrap_content"
@@ -40,6 +30,16 @@
         android:layout_marginTop="4dp"
         android:text="Alarm 1" />
 
+    <TextView
+        android:id="@+id/dismiss_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/text_view_label"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="8dp"
+        android:text="Alarm 1" />
+
     <Switch
         android:id="@+id/switch_alarm"
         android:layout_width="wrap_content"
@@ -48,6 +48,16 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="31dp"
         android:layout_marginEnd="28dp" />
+
+    <Button
+        android:id="@+id/button_edit_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/switch_alarm"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="11dp"
+        android:layout_toStartOf="@+id/button_delete"
+        android:text="EDIT" />
 
     <Button
         android:id="@+id/button_delete"

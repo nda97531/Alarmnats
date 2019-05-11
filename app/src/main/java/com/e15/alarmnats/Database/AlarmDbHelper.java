@@ -179,9 +179,10 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
                 alarm.setFlag(c.getInt(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_NAME_FLAG)));
 
                 alarm.setQuestion(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_QUESTION)));
-                alarm.setQuestion(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_ANSWER)));
+                alarm.setAnswer(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_ANSWER)));
 
                 alarmList.add(alarm);
+
             } while (c.moveToNext());
         }
 

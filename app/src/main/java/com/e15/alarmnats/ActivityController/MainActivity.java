@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> mRingtoneNames = new ArrayList<>();
     private ArrayList<String> mRingtoneUris = new ArrayList<>();
     private ArrayList<String> mLabels = new ArrayList<>();
+    private ArrayList<String> mQuestions = new ArrayList<>();
     private ArrayList<Integer> mFlags = new ArrayList<>();
 
     private RecylcerViewAdapter adapter;
@@ -101,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
     // get all alarms
     public void getAlarms() {
-        System.out.println("getting all alarms");
         List<Alarm> alarmList = dbHelper.getAllAlarms();
 
         mAlarmTimes.clear();
@@ -110,16 +110,18 @@ public class MainActivity extends AppCompatActivity {
         mRingtoneNames.clear();
         mRingtoneUris.clear();
         mLabels.clear();
+        mQuestions.clear();
         mFlags.clear();
 
-        for (Alarm alarm : alarmList) {
-            mAlarmTimes.add(alarm.getAlarmTime());
-            mAlarmTimesInMillis.add(alarm.getAlarmTimeInMillis());
-            mAlarmStatuses.add(alarm.isAlarmStatus());
-            mRingtoneNames.add(alarm.getRingtoneName());
-            mRingtoneUris.add(alarm.getRingtoneUri().toString());
-            mLabels.add(alarm.getLabel());
-            mFlags.add(alarm.getFlag());
+        for (Alarm onealarm : alarmList) {
+            mAlarmTimes.add(onealarm.getAlarmTime());
+            mAlarmTimesInMillis.add(onealarm.getAlarmTimeInMillis());
+            mAlarmStatuses.add(onealarm.isAlarmStatus());
+            mRingtoneNames.add(onealarm.getRingtoneName());
+            mRingtoneUris.add(onealarm.getRingtoneUri());
+            mLabels.add(onealarm.getLabel());
+            mQuestions.add(onealarm.getQuestion());
+            mFlags.add(onealarm.getFlag());
         }
         initRecyclerView();
     }
@@ -133,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 mRingtoneNames,
                 mRingtoneUris,
                 mLabels,
+                mQuestions,
                 mFlags,
                 this);
 

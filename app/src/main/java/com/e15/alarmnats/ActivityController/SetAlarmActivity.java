@@ -47,7 +47,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     private PendingIntent pendingIntent;
 
     private static final int RINGTONE_REQUEST_CODE = 1;
-    private String question = "default", answer = "default";
+    private String question = "Default", answer = "default";
 
     private Alarm alarm;
 
@@ -71,10 +71,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         // receiverIntent
         receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
-
-        // ringtone
-        ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        setRingtone(ringtoneUri);
 
         // time picker
         textViewTimePicker.setOnClickListener(new View.OnClickListener() {
@@ -152,10 +148,15 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
         // show old data
         textViewTimePicker.setText(alarm.getAlarmTime());
+
         ringtonePickerButton.setText(alarm.getRingtoneName());
+
         label.setText(alarm.getLabel());
-        System.out.println("spinner position: " + getQuestionPosition(alarm.getQuestion()) + " " + alarm.getQuestion());
+
         question_spinner.setSelection(getQuestionPosition(alarm.getQuestion()));
+
+        ringtoneUri = Uri.parse(alarm.getRingtoneUri());
+        setRingtone(ringtoneUri);
     }
 
     // create pending intent

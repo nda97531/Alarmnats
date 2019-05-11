@@ -33,6 +33,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
     private ArrayList<String> mRingtoneNames = new ArrayList<>();
     private ArrayList<String> mRingtoneUris = new ArrayList<>();
     private ArrayList<String> mLabels = new ArrayList<>();
+    private ArrayList<String> mQuestions = new ArrayList<>();
     private ArrayList<Integer> mFlags = new ArrayList<>();
     private Context mContext;
 
@@ -42,6 +43,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
                                ArrayList<String> mRingtoneNames,
                                ArrayList<String> mRingtoneUris,
                                ArrayList<String> mLabels,
+                               ArrayList<String> mQuestions,
                                ArrayList<Integer> mFlags,
                                Context mContext) {
         this.mAlarmTimes = mAlarmTimes;
@@ -50,6 +52,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         this.mRingtoneNames = mRingtoneNames;
         this.mRingtoneUris = mRingtoneUris;
         this.mLabels = mLabels;
+        this.mQuestions = mQuestions;
         this.mFlags = mFlags;
         this.mContext = mContext;
     }
@@ -69,6 +72,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         viewHolder.alarmTime.setText(mAlarmTimes.get(i));
         viewHolder.alarmSwitch.setChecked(mAlarmStatuses.get(i));
         viewHolder.alarmLabel.setText(mLabels.get(i));
+        viewHolder.dismisQuestion.setText(mQuestions.get(i));
 //        viewHolder.editAlarmButton.setText(mRingtoneNames.get(i));
 
         final long timeInMillis = mAlarmTimesInMillis.get(i);
@@ -126,6 +130,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         Button editAlarmButton;
         Button deleteButton;
         TextView alarmLabel;
+        TextView dismisQuestion;
         Switch alarmSwitch;
         RelativeLayout parentLayout;
 
@@ -136,6 +141,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
             editAlarmButton = itemView.findViewById(R.id.button_edit_alarm);
             deleteButton = itemView.findViewById(R.id.button_delete);
             alarmLabel = itemView.findViewById(R.id.text_view_label);
+            dismisQuestion = itemView.findViewById(R.id.dismiss_method);
             alarmSwitch = itemView.findViewById(R.id.switch_alarm);
             parentLayout = itemView.findViewById(R.id.layout_parent);
 
