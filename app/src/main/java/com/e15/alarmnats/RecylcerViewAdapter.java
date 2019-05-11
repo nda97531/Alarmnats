@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -81,6 +82,16 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
                 if (mContext instanceof MainActivity) {
                     Log.d("delete", "delete button clicked");
                     ((MainActivity) mContext).deleteAlarm(mFlags.get(poisition), poisition);
+                }
+            }
+        });
+
+        viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    ((MainActivity) mContext).enableAlarm(mFlags.get(poisition));
+                } else {
+                    ((MainActivity) mContext).cancelAlarm(mFlags.get(poisition), true);// change status when switching on/off
                 }
             }
         });

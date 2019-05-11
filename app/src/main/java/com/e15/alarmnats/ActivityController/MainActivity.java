@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 String ringtoneUri = data.getStringExtra("ringtoneUri");
                 String ringtoneName = data.getStringExtra("ringtoneName");
                 int flag = data.getIntExtra("flags", 0);
+                String question = data.getStringExtra("question");
+                String answer = data.getStringExtra("answer");
 
                 Log.d("intent result", time);
                 Log.d("intent result", String.valueOf(millis));
@@ -97,13 +99,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("intent result", String.valueOf(flag));
 
                 // create alarm
-                setAlarm(time, millis, label,ringtoneUri,ringtoneName, flag);
+                setAlarm(time, millis, label, ringtoneUri, ringtoneName, flag, question, answer);
             }
         }
     }
 
     // create new alarm
-    private void setAlarm(String time, long timeInMillis, String label, String ringtoneUri, String ringtoneName, int flag) {
+    private void setAlarm(String time, long timeInMillis, String label, String ringtoneUri, String ringtoneName, int flag, String question, String answer) {
         alarm.setAlarmTime(time);
         alarm.setAlarmTimeInMillis(timeInMillis);
         alarm.setLabel(label);
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         alarm.setRingtoneName(ringtoneName);
         alarm.setAlarmStatus(true);
         alarm.setFlag(flag);
+        alarm.setQuestion(question);
+        alarm.setAnswer(answer);
 
         saveAlarm();
         getAlarms();
@@ -167,16 +171,38 @@ public class MainActivity extends AppCompatActivity {
         Log.d("main", "before if");
         if (dbHelper.deleteAlarm(flag)) {
             Log.d("main", "row deleted");
-            cancelAlarm(mFlags.get(position));
+            cancelAlarm(mFlags.get(position), false); //delete alarm in DB => no need to change status in DB
             getAlarms();
         }
     }
 
-    // cancel Alarm Intent
-    public void cancelAlarm(int flag) {
+    // cancel / disable Alarm
+    public void cancelAlarm(int flag, boolean changeStatus) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pendingIntent);
+        System.out.println("canceled");
+
+        if (changeStatus) {
+            System.out.println("number switch off: " + dbHelper.updateStatus(flag, 0));
+        }
+    }
+
+    // enable alarm
+    public void enableAlarm(int flag) {
+        Alarm alarm = dbHelper.getAlarm(flag);
+
+        Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        receiverIntent.putExtra("alarmTime", alarm.getAlarmTime());
+        receiverIntent.putExtra("question", alarm.getQuestion());
+        receiverIntent.putExtra("answer", alarm.getAnswer());
+        receiverIntent.putExtra("ringtoneUri", alarm.getRingtoneUri().toString());
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getFlag(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        System.out.println("number switch on: " + dbHelper.updateStatus(flag, 1));
     }
 }

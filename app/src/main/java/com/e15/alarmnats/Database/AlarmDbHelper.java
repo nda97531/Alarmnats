@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.e15.alarmnats.Model.Alarm;
@@ -28,67 +29,6 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         this.mCtx = context;
     }
 
-    public void addAlarm(Alarm alarm) {
-        ContentValues cv = new ContentValues();
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
-        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
-        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
-
-        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
-
-        db.insert(AlarmContract.AlarmTable.TABLE_NAME, null, cv);
-    }
-
-    public boolean deleteAlarm(Integer flag) {
-        Log.d("dbhelper", "delete method");
-
-        String where = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
-        String[] whereAgs = new String[]{flag.toString()};
-
-        return db.delete(AlarmContract.AlarmTable.TABLE_NAME, where, whereAgs) > 0;
-    }
-
-    public void updateAlarm(Alarm alarm) {
-        ContentValues cv = new ContentValues();
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
-        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
-        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
-
-        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
-        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
-
-        String where = "_ID = ?";
-        String[] whereAgs = new String[]{String.valueOf(AlarmContract.AlarmTable._ID)};
-
-        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
-    }
-
-    public void updateAlarmStatus(String alarmTime) {
-        ContentValues cv = new ContentValues();
-        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, 0);
-
-        String where = AlarmContract.AlarmTable.COLUMN_ALARM_TIME + " = ?";
-        String[] whereAgs = new String[]{alarmTime};
-
-        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
-    }
-
-    public static AlarmDbHelper getInstance(Context ctx) {
-        if (mInstance == null) {
-            mInstance = new AlarmDbHelper(ctx.getApplicationContext());
-        }
-        return mInstance;
-    }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         this.db = db;
@@ -109,6 +49,121 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
                 ")";
 
         db.execSQL(SQL_CREATE_ALARM_TABLE);
+    }
+
+    public void addAlarm(Alarm alarm) {
+        ContentValues cv = new ContentValues();
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
+        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
+        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
+
+        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
+
+        db.insert(AlarmContract.AlarmTable.TABLE_NAME, null, cv);
+    }
+
+    public Alarm getAlarm(Integer flag) {
+        String[] projection = {
+                AlarmContract.AlarmTable._ID,
+                AlarmContract.AlarmTable.COLUMN_ALARM_TIME,
+                AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES,
+                AlarmContract.AlarmTable.COLUMN_ALARM_STATUS,
+                AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME,
+                AlarmContract.AlarmTable.COLUMN_RINGTONE_URI,
+                AlarmContract.AlarmTable.COLUMN_LABEL,
+                AlarmContract.AlarmTable.COLUMN_NAME_FLAG,
+                AlarmContract.AlarmTable.COLUMN_QUESTION,
+                AlarmContract.AlarmTable.COLUMN_ANSWER
+        };
+
+        // Filter results WHERE "title" = 'My Title'
+        String selection = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
+        String[] selectionArgs = {flag.toString()};
+
+        Cursor c = db.query(
+                AlarmContract.AlarmTable.TABLE_NAME,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+
+        ArrayList<Alarm> alarms = new ArrayList<>();
+        while (c.moveToNext()) {
+            Alarm alarm = new Alarm(
+                    c.getInt(c.getColumnIndexOrThrow(AlarmContract.AlarmTable._ID)),
+                    c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_ALARM_TIME)),
+                    c.getLong(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES)),
+                    c.getInt(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS)) != 0,
+                    c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME)),
+                    Uri.parse(c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI))),
+                    c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_LABEL)),
+                    c.getInt(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_NAME_FLAG)),
+                    c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_QUESTION)),
+                    c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_ANSWER))
+            );
+
+            alarms.add(alarm);
+        }
+        c.close();
+        return alarms.get(0);
+    }
+
+    public int updateStatus(Integer flag, int status) {
+        // SET
+        ContentValues values = new ContentValues();
+        values.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, status);
+
+        // WHERE
+        String selection = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
+        String[] selectionArgs = {flag.toString()};
+
+        return db.update(
+                AlarmContract.AlarmTable.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+    }
+
+    public boolean deleteAlarm(Integer flag) {
+        Log.d("dbhelper", "delete method");
+
+        String where = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
+        String[] whereAgs = new String[]{flag.toString()};
+
+        return db.delete(AlarmContract.AlarmTable.TABLE_NAME, where, whereAgs) > 0;
+    }
+
+    public void updateAlarm(Alarm alarm) {
+        ContentValues cv = new ContentValues();
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_TIME, alarm.getAlarmTime());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
+        cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
+        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
+        cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
+        cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
+
+        String where = "_ID = ?";
+        String[] whereAgs = new String[]{String.valueOf(AlarmContract.AlarmTable._ID)};
+
+        db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
+    }
+
+    public static AlarmDbHelper getInstance(Context ctx) {
+        if (mInstance == null) {
+            mInstance = new AlarmDbHelper(ctx.getApplicationContext());
+        }
+        return mInstance;
     }
 
     @Override

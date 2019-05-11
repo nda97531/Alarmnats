@@ -99,7 +99,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
                 String time = (String) textViewTimePicker.getText();
                 String labelText = label.getText().toString();
-                int myFlag = (int) (System.currentTimeMillis() / 1000);
+                final int myFlag = (int) (System.currentTimeMillis() / 1000);
 
                 // SET ALARM MANAGER
                 setPendingIntent(myFlag);
@@ -218,17 +218,4 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         receiverIntent.putExtra("ringtoneUri", ringtoneUri.toString());
 
     }
-
-
-
-//    public void cancelAlarm(int flag) {
-//        receiverIntent = new Intent(this, AlarmReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(this, flag, receiverIntent, 0);
-//
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.cancel(pendingIntent);
-//
-//        finish();
-//    }
-
 }

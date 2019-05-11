@@ -14,7 +14,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         System.out.println("receive @@");
 
         try {
-            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
+                    || intent.getAction().equals("com.mine.alarm")) {
                 ring(context, intent);
             }
         } catch (NullPointerException e) {

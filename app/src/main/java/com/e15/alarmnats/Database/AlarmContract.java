@@ -6,9 +6,9 @@ public final class AlarmContract {
 
     public static class AlarmTable {
 
-        public static final String _ID = "_ID";
         public static final String TABLE_NAME = "alarm_times";
 
+        public static final String _ID = "_ID";
         public static final String COLUMN_ALARM_TIME = "alarm_time";
         public static final String COLUMN_ALARM_IN_MILLIES = "alarm_in_millis";
         public static final String COLUMN_ALARM_STATUS = "alarm_status";

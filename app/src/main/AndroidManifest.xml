@@ -38,6 +38,7 @@
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.mine.alarm" />
             </intent-filter>
         </receiver>
     </application>
