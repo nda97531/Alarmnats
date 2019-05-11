@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,7 +20,9 @@ import com.e15.alarmnats.AlarmReceiver;
 import com.e15.alarmnats.R;
 import com.e15.alarmnats.RecylcerViewAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SET_ALARM_INTENET_REQUEST_CODE = 1;
     public static final int SCAN_QR_CODE_INTENT_REQUEST_CODE = 100;
     public static final int MATH_TEST_INTENT_REQUEST_CODE = 200;
+    public static final int EDIT_ALARM_INTENET_REQUEST_CODE = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
         addAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Alarm alarm = defaultAlarmObject();
                 Intent setAlarmIntent = new Intent(MainActivity.this, SetAlarmActivity.class);
+                setAlarmIntent.putExtra("alarmObject", alarm);
+                setAlarmIntent.putExtra("isNewAlarm", true);
                 MainActivity.this.startActivityForResult(setAlarmIntent, SET_ALARM_INTENET_REQUEST_CODE);
             }
         });
@@ -81,53 +88,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         adapter.onRecAdapterActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            alarm = (Alarm) data.getSerializableExtra("alarmObject");
             if (requestCode == SET_ALARM_INTENET_REQUEST_CODE) {
-                String time = data.getStringExtra("timeString");
-                long millis = data.getLongExtra("timeInMillis", 0);
-                String label = data.getStringExtra("label");
-                String ringtoneUri = data.getStringExtra("ringtoneUri");
-                String ringtoneName = data.getStringExtra("ringtoneName");
-                int flag = data.getIntExtra("flags", 0);
-                String question = data.getStringExtra("question");
-                String answer = data.getStringExtra("answer");
-
-                Log.d("intent result", time);
-                Log.d("intent result", String.valueOf(millis));
-                Log.d("intent result", label);
-                Log.d("intent result", ringtoneUri);
-                Log.d("intent result", ringtoneName);
-                Log.d("intent result", String.valueOf(flag));
-
-                // create alarm
-                setAlarm(time, millis, label, ringtoneUri, ringtoneName, flag, question, answer);
+                dbHelper.addAlarm(alarm);
+                getAlarms();
+            } else if (requestCode == EDIT_ALARM_INTENET_REQUEST_CODE) {
+                dbHelper.updateAlarm(alarm);
+                getAlarms();
             }
         }
     }
 
-    // create new alarm
-    private void setAlarm(String time, long timeInMillis, String label, String ringtoneUri, String ringtoneName, int flag, String question, String answer) {
-        alarm.setAlarmTime(time);
-        alarm.setAlarmTimeInMillis(timeInMillis);
-        alarm.setLabel(label);
-        alarm.setRingtoneUri(Uri.parse(ringtoneUri));
-        alarm.setRingtoneName(ringtoneName);
-        alarm.setAlarmStatus(true);
-        alarm.setFlag(flag);
-        alarm.setQuestion(question);
-        alarm.setAnswer(answer);
-
-        saveAlarm();
-        getAlarms();
-    }
-
-
-    // save new alarm to db
-    public void saveAlarm() {
-        dbHelper.addAlarm(alarm);
-    }
-
     // get all alarms
     public void getAlarms() {
+        System.out.println("getting all alarms");
         List<Alarm> alarmList = dbHelper.getAllAlarms();
 
         mAlarmTimes.clear();
@@ -202,7 +176,34 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getFlag(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getAlarmTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         System.out.println("number switch on: " + dbHelper.updateStatus(flag, 1));
+    }
+
+    //edit alarm
+    public void editAlarm(int flag) {
+        Alarm alarm = dbHelper.getAlarm(flag);
+        Intent intent = new Intent(this, SetAlarmActivity.class);
+        intent.putExtra("alarmObject", alarm);
+        intent.putExtra("isNewAlarm", false);
+        startActivityForResult(intent, EDIT_ALARM_INTENET_REQUEST_CODE);
+    }
+
+    public Alarm defaultAlarmObject() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String currentTime = sdf.format(new Date());
+        Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        String ringtoneName = RingtoneManager.getRingtone(this, ringtoneUri).getTitle(this);
+
+        return new Alarm(0,
+                currentTime,
+                System.currentTimeMillis(),
+                true,
+                ringtoneUri.toString(),
+                ringtoneName,
+                "",
+                -1,
+                getString(R.string.default_question),
+                "default");
     }
 }

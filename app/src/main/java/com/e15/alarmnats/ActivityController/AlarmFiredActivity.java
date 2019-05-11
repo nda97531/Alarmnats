@@ -59,11 +59,11 @@ public class AlarmFiredActivity extends AppCompatActivity {
         String question = getIntent().getExtras().getString("question");
         String answer = getIntent().getExtras().getString("answer");
 
-        if (question.equals("qr")) {
+        if (question.equals(getString(R.string.qr_question))) {
             Intent intent = new Intent(this, QRtestActivity.class);
             intent.putExtra("answer", answer);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
-        } else if (question.equals("math")) {
+        } else if (question.equals(getString(R.string.math_question))) {
             Intent intent = new Intent(this, MathTestActivity.class);
             startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else {

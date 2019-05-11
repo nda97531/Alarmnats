@@ -69,7 +69,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         viewHolder.alarmTime.setText(mAlarmTimes.get(i));
         viewHolder.alarmSwitch.setChecked(mAlarmStatuses.get(i));
         viewHolder.alarmLabel.setText(mLabels.get(i));
-        viewHolder.ringtoneButton.setText(mRingtoneNames.get(i));
+//        viewHolder.editAlarmButton.setText(mRingtoneNames.get(i));
 
         final long timeInMillis = mAlarmTimesInMillis.get(i);
         Uri ringtoneUri = Uri.parse(mRingtoneUris.get(i));
@@ -78,7 +78,6 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
         viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (mContext instanceof MainActivity) {
                     Log.d("delete", "delete button clicked");
                     ((MainActivity) mContext).deleteAlarm(mFlags.get(poisition), poisition);
@@ -92,6 +91,16 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
                     ((MainActivity) mContext).enableAlarm(mFlags.get(poisition));
                 } else {
                     ((MainActivity) mContext).cancelAlarm(mFlags.get(poisition), true);// change status when switching on/off
+                }
+            }
+        });
+
+        viewHolder.editAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof MainActivity) {
+                    Log.d("edit", "edit button clicked");
+                    ((MainActivity) mContext).editAlarm(mFlags.get(poisition));
                 }
             }
         });
@@ -114,7 +123,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView alarmTime;
-        Button ringtoneButton;
+        Button editAlarmButton;
         Button deleteButton;
         TextView alarmLabel;
         Switch alarmSwitch;
@@ -124,13 +133,12 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
             super(itemView);
 
             alarmTime = itemView.findViewById(R.id.text_view_alarm_time);
-            ringtoneButton = itemView.findViewById(R.id.button_rigntone);
+            editAlarmButton = itemView.findViewById(R.id.button_edit_alarm);
             deleteButton = itemView.findViewById(R.id.button_delete);
             alarmLabel = itemView.findViewById(R.id.text_view_label);
             alarmSwitch = itemView.findViewById(R.id.switch_alarm);
             parentLayout = itemView.findViewById(R.id.layout_parent);
 
-            ringtoneButton.setEnabled(false);
         }
     }
 }

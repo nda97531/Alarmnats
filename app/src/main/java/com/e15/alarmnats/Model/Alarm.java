@@ -2,33 +2,35 @@ package com.e15.alarmnats.Model;
 
 import android.net.Uri;
 
-public class Alarm {
+import java.io.Serializable;
+
+public class Alarm implements Serializable {
 
     private int _id;
     private String alarmTime;
     private long alarmTimeInMillis;
     private boolean alarmStatus;
     private String ringtoneName;
-    private Uri ringtoneUri;
+    private String ringtoneUri;
     private String label;
-    private int flag;
+    private Integer flag;
 
     private String question, answer;
 
     public Alarm() {}
 
     public Alarm(int _id, String alarmTime, long alarmTimeInMillis, boolean alarmStatus,
-                 String ringtoneName, Uri ringtoneUri, String label, int flag, String question, String answer) {
-        this._id = _id;
-        this.alarmTime = alarmTime;
+                 String ringtoneName, String ringtoneUri, String label, int flag, String question, String answer) {
+        this._id = _id; //
+        this.alarmTime = alarmTime; //
         this.alarmTimeInMillis = alarmTimeInMillis;
-        this.alarmStatus = alarmStatus;
-        this.ringtoneName = ringtoneName;
-        this.ringtoneUri = ringtoneUri;
-        this.label = label;
-        this.flag = flag;
-        this.question = question;
-        this.answer = answer;
+        this.alarmStatus = alarmStatus; //
+        this.ringtoneName = ringtoneName; //
+        this.ringtoneUri = ringtoneUri; //
+        this.label = label; //
+        this.flag = flag; //
+        this.question = question; //
+        this.answer = answer; //
     }
 
     public String getQuestion() {
@@ -87,11 +89,11 @@ public class Alarm {
         this.ringtoneName = ringtoneName;
     }
 
-    public Uri getRingtoneUri() {
+    public String getRingtoneUri() {
         return ringtoneUri;
     }
 
-    public void setRingtoneUri(Uri ringtoneUri) {
+    public void setRingtoneUri(String ringtoneUri) {
         this.ringtoneUri = ringtoneUri;
     }
 
@@ -103,7 +105,7 @@ public class Alarm {
         this.label = label;
     }
 
-    public int getFlag() {
+    public Integer getFlag() {
         return flag;
     }
 

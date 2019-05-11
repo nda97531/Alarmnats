@@ -12,10 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityController.MathTestActivity"></activity>
+        <activity android:name=".ActivityController.SetAlarmActivity"></activity>
+        <activity android:name=".ActivityController.MathTestActivity" />
         <activity android:name=".ActivityController.QRtestActivity" />
         <activity android:name=".ActivityController.QRscanActivity" />
-        <activity android:name=".ActivityController.SetAlarmActivity" />
         <activity
             android:name=".ActivityController.AlarmFiredActivity"
             android:excludeFromRecents="true" />

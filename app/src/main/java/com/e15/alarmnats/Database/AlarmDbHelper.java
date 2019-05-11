@@ -68,18 +68,6 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
     }
 
     public Alarm getAlarm(Integer flag) {
-        String[] projection = {
-                AlarmContract.AlarmTable._ID,
-                AlarmContract.AlarmTable.COLUMN_ALARM_TIME,
-                AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES,
-                AlarmContract.AlarmTable.COLUMN_ALARM_STATUS,
-                AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME,
-                AlarmContract.AlarmTable.COLUMN_RINGTONE_URI,
-                AlarmContract.AlarmTable.COLUMN_LABEL,
-                AlarmContract.AlarmTable.COLUMN_NAME_FLAG,
-                AlarmContract.AlarmTable.COLUMN_QUESTION,
-                AlarmContract.AlarmTable.COLUMN_ANSWER
-        };
 
         // Filter results WHERE "title" = 'My Title'
         String selection = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
@@ -103,7 +91,7 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
                     c.getLong(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES)),
                     c.getInt(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS)) != 0,
                     c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME)),
-                    Uri.parse(c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI))),
+                    c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI)),
                     c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_LABEL)),
                     c.getInt(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_NAME_FLAG)),
                     c.getString(c.getColumnIndexOrThrow(AlarmContract.AlarmTable.COLUMN_QUESTION)),
@@ -147,14 +135,13 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES, alarm.getAlarmTimeInMillis());
         cv.put(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS, alarm.isAlarmStatus() ? 1 : 0);
         cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME, alarm.getRingtoneName());
-        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri().toString());
+        cv.put(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI, alarm.getRingtoneUri());
         cv.put(AlarmContract.AlarmTable.COLUMN_LABEL, alarm.getLabel());
-        cv.put(AlarmContract.AlarmTable.COLUMN_NAME_FLAG, alarm.getFlag());
         cv.put(AlarmContract.AlarmTable.COLUMN_QUESTION, alarm.getQuestion());
         cv.put(AlarmContract.AlarmTable.COLUMN_ANSWER, alarm.getAnswer());
 
-        String where = "_ID = ?";
-        String[] whereAgs = new String[]{String.valueOf(AlarmContract.AlarmTable._ID)};
+        String where = AlarmContract.AlarmTable.COLUMN_NAME_FLAG + " = ?";
+        String[] whereAgs = new String[]{alarm.getFlag().toString()};
 
         db.update(AlarmContract.AlarmTable.TABLE_NAME, cv, where, whereAgs);
     }
@@ -185,9 +172,9 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
 
                 alarm.setAlarmTime(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_ALARM_TIME)));
                 alarm.setAlarmTimeInMillis(c.getInt(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_ALARM_IN_MILLIES)));
-                alarm.setAlarmStatus(c.getInt(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS)) == 1 ? true : false);
+                alarm.setAlarmStatus(c.getInt(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_ALARM_STATUS)) != 0 ? true : false);
                 alarm.setRingtoneName(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_RINGTONE_NAME)));
-                alarm.setRingtoneUri(Uri.parse(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI))));
+                alarm.setRingtoneUri(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_RINGTONE_URI)));
                 alarm.setLabel(c.getString(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_LABEL)));
                 alarm.setFlag(c.getInt(c.getColumnIndex(AlarmContract.AlarmTable.COLUMN_NAME_FLAG)));
 

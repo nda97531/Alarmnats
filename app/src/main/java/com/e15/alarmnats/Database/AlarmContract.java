@@ -16,7 +16,6 @@ public final class AlarmContract {
         public static final String COLUMN_RINGTONE_URI = "ringtone_uri";
         public static final String COLUMN_LABEL = "label";
         public static final String COLUMN_NAME_FLAG = "flag";
-
         public static final String COLUMN_QUESTION = "question";
         public static final String COLUMN_ANSWER = "answer";
     }
