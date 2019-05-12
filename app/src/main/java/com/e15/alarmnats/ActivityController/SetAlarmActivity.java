@@ -412,6 +412,8 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             return 1;
         } else if (name.equals(getString(R.string.math_question))) {
             return 2;
+        } else if (name.equals(getString(R.string.verify_recaptcha))){
+            return 3;
         }
         return 0;
     }
