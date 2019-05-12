@@ -1,6 +1,4 @@
-# Android Alarm Clock
-
-Current Trends In Software Engineering - Assignment 2
+#Alarmnats
 
 ## Features
 
@@ -9,10 +7,7 @@ Current Trends In Software Engineering - Assignment 2
 - [x] Ask user to answer a question to dismiss alarm
 - [x] Multiple alarms
 - [x] Delete alarm
-- [ ] Edit alarm
-- [ ] Disable alarm
+- [x] Edit alarm
+- [x] Disable alarm
 
-
-### TODO 
-
-Polish UI
+https://github.com/robotikka/Android-Alarm-Clock

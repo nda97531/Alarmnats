@@ -171,18 +171,21 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selected = (String) question_spinner.getSelectedItem();
-        this.question = selected;
 
         if (selected.equals(getString(R.string.default_question))) {
             this.answer = "default";
+            this.question = selected;
+            alarm.setQuestion(this.question);
+            alarm.setAnswer(this.answer);
         } else if (selected.equals(getString(R.string.qr_question))) {
             Intent intent = new Intent(this, QRscanActivity.class);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else if (selected.equals(getString(R.string.math_question))) { //continue here
             this.answer = "default";
+            this.question = selected;
+            alarm.setQuestion(this.question);
+            alarm.setAnswer(this.answer);
         }
-        alarm.setQuestion(this.question);
-        alarm.setAnswer(this.answer);
     }
 
     //spinner callback
@@ -209,6 +212,9 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 setRingtone(ringtoneUri);
             } else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
                 this.answer = data.getStringExtra("code");
+                this.question = getString(R.string.qr_question);
+                alarm.setQuestion(this.question);
+                alarm.setAnswer(this.answer);
             }
         }
     }
@@ -224,7 +230,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
         alarm.setRingtoneUri(uri.toString());
         alarm.setRingtoneName(ringtoneName);
-
     }
 
     public int getQuestionPosition(String name) {
