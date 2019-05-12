@@ -17,6 +17,12 @@ android {
         }
     }
 }
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -35,4 +41,9 @@ dependencies {
     //    my addition
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'com.google.android.gms:play-services-safetynet:16.0.0'
+
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation 'com.spotify.android:auth:1.1.0'
+//    implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+
 }

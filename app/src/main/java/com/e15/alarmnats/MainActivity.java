@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getAlarmTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getAlarmTimeInMillis(), pendingIntent);
         System.out.println("number switch on: " + dbHelper.updateStatus(flag, 1));
     }
 

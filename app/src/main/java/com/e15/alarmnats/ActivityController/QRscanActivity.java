@@ -21,7 +21,6 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 public class QRscanActivity extends AppCompatActivity {
-    //    public static final String EXTRA_MESSAGE = "my message";
     SurfaceView surfaceView;
     TextView textView;
 
@@ -50,7 +49,7 @@ public class QRscanActivity extends AppCompatActivity {
                 try {
                     cameraSource.start(holder);
                 } catch (IOException e) {
-//                    e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
 
@@ -73,17 +72,25 @@ public class QRscanActivity extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> codes = detections.getDetectedItems();
                 if (codes.size() != 0) {
+                    final String thisCode = codes.valueAt(0).displayValue;
                     textView.post(new Runnable() {
                         @Override
                         public void run() {
-                            textView.setText(codes.valueAt(0).displayValue);
+                            textView.setText(thisCode);
                         }
                     });
 
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("code", codes.valueAt(0).displayValue);
-                    setResult(Activity.RESULT_OK, returnIntent);
-                    finish();
+                    if(getIntent().getExtras().getBoolean("isSettingNewAlarm")) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("code", thisCode);
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+                    }
+                    else if (getIntent().getExtras().getString("answer").equals(thisCode)) {
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+                    }
                 }
             }
         });

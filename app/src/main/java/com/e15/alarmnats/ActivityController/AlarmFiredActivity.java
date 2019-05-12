@@ -18,6 +18,7 @@ public class AlarmFiredActivity extends AppCompatActivity {
 //    private AlarmDbHelper dbHelper;
 
     MediaPlayer mediaPlayer;
+    String question, answer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +58,9 @@ public class AlarmFiredActivity extends AppCompatActivity {
             Log.e("media exception", e.toString());
         }
 
-        String question = getIntent().getExtras().getString("question");
-        String answer = getIntent().getExtras().getString("answer");
-
-        if (question.equals(getString(R.string.qr_question))) {
-            Intent intent = new Intent(this, QRtestActivity.class);
-            intent.putExtra("answer", answer);
-            startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
-        } else if (question.equals(getString(R.string.math_question))) {
-            Intent intent = new Intent(this, MathTestActivity.class);
-            startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
-        } else if (question.equals(getString(R.string.verify_recaptcha))) {
-            Intent intent = new Intent(this, RecaptchaActivity.class);
-            startActivityForResult(intent, MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
-        } else {
-            // Default
-        }
+        question = getIntent().getExtras().getString("question");
+        answer = getIntent().getExtras().getString("answer");
+        startQuestion();
     }
 
     @Override
@@ -83,6 +71,24 @@ public class AlarmFiredActivity extends AppCompatActivity {
                     || requestCode == MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE) {
                 finishActivity();
             }
+        }
+        else startQuestion();
+    }
+
+    private void startQuestion(){
+        if (question.equals(getString(R.string.qr_question))) {
+            Intent intent = new Intent(this, QRscanActivity.class);
+            intent.putExtra("answer", answer);
+            intent.putExtra("isSettingNewAlarm", false);
+            startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+        } else if (question.equals(getString(R.string.math_question))) {
+            Intent intent = new Intent(this, MathTestActivity.class);
+            startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
+        } else if (question.equals(getString(R.string.verify_recaptcha))) {
+            Intent intent = new Intent(this, RecaptchaActivity.class);
+            startActivityForResult(intent, MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
+        } else {
+            // Default
         }
     }
 

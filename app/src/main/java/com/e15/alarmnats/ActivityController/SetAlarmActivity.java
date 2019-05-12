@@ -52,10 +52,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     private Alarm alarm;
 
+    private boolean marker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
+        marker = true;
 
         alarm = (Alarm) getIntent().getSerializableExtra("alarmObject");
 
@@ -96,15 +99,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                alarm.setAlarmTimeInMillis(calendar.getTimeInMillis());
                 alarm.setAlarmTime((String) textViewTimePicker.getText());
                 alarm.setLabel(label.getText().toString());
                 if (getIntent().getExtras().getBoolean("isNewAlarm")) {
                     alarm.setFlag((int) (System.currentTimeMillis() / 1000));
                 }
-
-                // SET ALARM MANAGER
-                setPendingIntent(alarm.getFlag());
 
                 int hour = Integer.parseInt(alarm.getAlarmTime().split(":")[0]);
                 int min = Integer.parseInt(alarm.getAlarmTime().split(":")[1]);
@@ -121,9 +121,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                     Toast.makeText(SetAlarmActivity.this, "Alarm is set for " + alarm.getAlarmTime(), Toast.LENGTH_SHORT).show();
                 }
 
-                alarm.setAlarmTimeInMillis(calendar.getTimeInMillis());
+                receiverIntent.putExtra("question", question);
+                receiverIntent.putExtra("answer", answer);
+                receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
+
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), alarm.getFlag(), receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 //                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
                 /// send result to mainActivity
@@ -137,7 +141,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         });
 
         //initialize the question spinner
-
         question_spinner.setOnItemSelectedListener(this);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter
@@ -156,57 +159,53 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
         question_spinner.setSelection(getQuestionPosition(alarm.getQuestion()));
 
+
         ringtoneUri = Uri.parse(alarm.getRingtoneUri());
         setRingtone(ringtoneUri);
-    }
-
-    // create pending intent
-    private void setPendingIntent(int flag_id) {
-        receiverIntent.putExtra("question", this.question);
-        receiverIntent.putExtra("answer", this.answer);
-
-        this.pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag_id, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     //spinner callback
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (marker){
+            marker = false;
+            return;
+        }
+
         String selected = (String) question_spinner.getSelectedItem();
 
         if (selected.equals(getString(R.string.default_question))) {
-            this.answer = "default";
-            this.question = selected;
-            alarm.setQuestion(this.question);
-            alarm.setAnswer(this.answer);
+            answer = "default";
+            question = selected;
+            alarm.setQuestion(question);
+            alarm.setAnswer(answer);
         } else if (selected.equals(getString(R.string.qr_question))) {
-            Intent intent = new Intent(this, QRscanActivity.class);
+            Intent intent = new Intent(SetAlarmActivity.this, QRscanActivity.class);
+            intent.putExtra("isSettingNewAlarm", true);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else if (selected.equals(getString(R.string.math_question))) { //continue here
-            this.answer = "default";
-            this.question = selected;
-            alarm.setQuestion(this.question);
-            alarm.setAnswer(this.answer);
+            answer = "default";
+            question = selected;
+            alarm.setQuestion(question);
+            alarm.setAnswer(answer);
         } else if (selected.equals(getString(R.string.verify_recaptcha))) {
-            this.answer = "default";
-            this.question = selected;
-            alarm.setQuestion(this.question);
-            alarm.setAnswer(this.answer);
+            answer = "default";
+            question = selected;
+            alarm.setQuestion(question);
+            alarm.setAnswer(answer);
         }
     }
-
     //spinner callback
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        System.out.println("nothing selected :((");
     }
 
     // time set callback
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         textViewTimePicker.setText(hourOfDay + ":" + minute);
-        System.out.println("set time callback");
-
-        receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
+        System.out.println("set time callback " + hourOfDay + ":" + minute);
     }
 
     // result from activity for ringtone picker
@@ -243,6 +242,8 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             return 1;
         } else if (name.equals(getString(R.string.math_question))) {
             return 2;
+        } else if (name.equals(getString(R.string.verify_recaptcha))){
+            return 3;
         }
         return 0;
     }
