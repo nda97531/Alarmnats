@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.e15.alarmnats">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,20 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ActivityController.RecaptchaActivity"></activity>
         <activity android:name=".ActivityController.SetAlarmActivity" />
+        <activity
+            android:permission="android.permission.INTERNET"
+            android:name=".ActivityController.SearchSongActivity"
+            android:label="@string/title_activity_display_search_song"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ActivityController.WeatherActivity"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/title_activity_weather"
+            android:permission="android.permission.INTERNET"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme" />
         <activity android:name=".ActivityController.MathTestActivity" />
         <activity android:name=".ActivityController.QRtestActivity" />
         <activity android:name=".ActivityController.QRscanActivity" />
@@ -32,6 +47,11 @@
         <activity
             android:name=".ActivityController.WeatherActivity"
             android:parentActivityName=".MainActivity" />
+
+        <!-- Needed for LoginActivity to work -->
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

@@ -24,5 +24,16 @@
         <item>@string/math_question</item>
         <item>@string/verify_recaptcha</item>
     </string-array>
-
+    <string name="Choose_Storage_and_default">Default</string>
+    <string name="Search_from_spotify">Search from spotify</string>
+    <string-array name="SearchMusic">
+        <item>@string/Choose_Storage_and_default</item>
+        <item>@string/Search_from_spotify</item>
+    </string-array>
+    <string name="title_activity_weather">WeatherActivity</string>
+    <string name="title_activity_function">Function</string>
+    <string name="title_activity_display_search_song">DisplaySearchSong</string>
+    <string name="tag_sharedprefs">com.e15.alarmnats</string>
+    <string name="tag_sharedpref_token">com.e15.alarmnats.token</string>
+    <string name="choose_song">Choose Song</string>
 </resources>

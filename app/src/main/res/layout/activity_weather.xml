@@ -23,7 +23,6 @@
         android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="13sp" />
-
     <TextView
         android:id="@+id/selectCity"
         android:layout_width="wrap_content"

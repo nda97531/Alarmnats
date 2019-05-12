@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.e15.alarmnats.Function;
+import android.support.v7.app.ActionBar;
+
 import com.e15.alarmnats.R;
 
 import org.json.JSONException;
@@ -111,7 +116,7 @@ public class WeatherActivity extends AppCompatActivity {
                     "&units=metric&appid=" + OPEN_WEATHER_MAP_API);
             return xml;
         }
-
+        
         @Override
         protected void onPostExecute(String xml) {
 
@@ -142,5 +147,4 @@ public class WeatherActivity extends AppCompatActivity {
 
         }
     }
-
 }

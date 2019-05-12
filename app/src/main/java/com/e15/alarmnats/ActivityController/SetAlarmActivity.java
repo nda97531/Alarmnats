@@ -12,32 +12,59 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+//import android.support.v7.graphics.Palette;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+// import android.widget.TextClock;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
 import com.e15.alarmnats.AlarmReceiver;
 import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.R;
 import com.e15.alarmnats.ViewSupport.TimePickerFragment;
-
+import com.e15.alarmnats.Model.AlarmItem;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
+public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
+        AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = "SetAlarmActivity";
     // declare variables
     private TextView textViewTimePicker;
+    // private TextClock textViewTimePicker;
+    private AutoCompleteTextView txtSong;
     private Button ringtonePickerButton;
     private EditText label;
     private Button setAlarmButton;
     private Spinner question_spinner;
+
+    private Button btnChooseSong;
+
+    // Set song
+//    private Spinner spChoose;
+//
+//    private ImageView preview;
+//
+//    private ArrayAdapter<String> adapterSong;
+//
+//    private LinearLayout background;
+//
+//    private ImageView imgAlbum;
+//
+//    private boolean itemClicked = false;
 
     private Calendar calendar;
 
@@ -47,10 +74,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     private Intent receiverIntent;
     private PendingIntent pendingIntent;
 
+    private List<String> stringResults = new ArrayList<>();
+
     private static final int RINGTONE_REQUEST_CODE = 1;
     private String question = "Default", answer = "default";
 
     private Alarm alarm;
+    private static final int SPOTIFY_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +92,133 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         // initialize variables
         textViewTimePicker = findViewById(R.id.text_view_time_picker);
         question_spinner = (Spinner) findViewById(R.id.question_spinner);
-        ringtonePickerButton = findViewById(R.id.button_rigtone_picker);
+        // ringtonePickerButton = findViewById(R.id.button_rigtone_picker);
         label = findViewById(R.id.textbox_label);
         setAlarmButton = findViewById(R.id.button_start_alarm);
+
+        //choose selection
+
+//        adapterSong=new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line,stringResults);
+//
+//        txtSong=(AutoCompleteTextView)findViewById(R.id.txtSong);
+//
+//        txtSong.setAdapter(adapterSong);
+//
+//        spChoose=(Spinner)findViewById(R.id.spChoose);
+//
+//        spChoose.setOnItemSelectedListener(this);
+//
+//        ArrayAdapter<CharSequence>adapter_selection=ArrayAdapter.createFromResource(this,R.array.SearchMusic,android.R.layout.simple_spinner_item);
+//
+//        spChoose.setAdapter(adapter_selection);
+//
+//        spChoose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                // your code here
+//
+//                if(position!=0){
+//                    ringtonePickerButton.setEnabled(false);
+//
+//                    txtSong.setEnabled(true);
+//
+//                }
+//
+//
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parentView) {
+//                // your code here
+//            }
+//
+//        });
+//
+//        imgAlbum=(ImageView)findViewById(R.id.imgAlbum);
+//
+//        background=findViewById(R.id.constraintLayout);
+//
+//        preview = (ImageView) findViewById(R.id.preview);
+//
+//        txtSong.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//                // if the change is due to the user clicking a suggested song, don't suggest more
+//                if(itemClicked) {
+//                    itemClicked = false;
+//                    return;
+//                }
+//
+//                // when users enters another character..
+//                updateSongs(trackField.getText().toString());
+//
+//            }
+//        });
+//
+//        // when a user clicks a selected track in from search suggestions, load that into alarmItem
+//        trackField.setOnItemClickListener((adapterView, view12, i, l) -> {
+//
+//            // stops suggesting
+//            itemClicked = true;
+//            AlarmItem searchItem = searchResultsItems.get(i);
+//
+//            // updates alarmItem with attributes from search item
+//            alarmItem.setName(searchItem.getName());
+//            alarmItem.setArtist(searchItem.getArtist());
+//            alarmItem.setImageUrl(searchItem.getImageUrl());
+//            alarmItem.setTrackUri(searchItem.getTrackUri());
+//
+//            try {
+//                alarmItem.jsonify(); // updates json in alarmItem
+//            } catch (JSONException e) {
+//                Log.e("MainActivity", "error converting into json");
+//                e.printStackTrace();}
+//
+//            // updates UI
+//            trackField.setText(alarmItem.getArtist() + " - " + alarmItem.getName());
+//            updateAlbumArt(alarmItem.getImageUrl());
+//            preview.setVisibility(View.VISIBLE);
+//
+//            // hides keybaord
+//            hideKeyboard();
+//
+//        });
+//
+//        // when a users selects a track from clicking enter on keyboard
+//        trackField.setOnKeyListener((view1, keyCode, keyEvent) -> {
+//
+//            itemClicked = true;
+//
+//            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+//                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+//
+//                // Perform search on enter press
+//                searchTrack(trackField.getText().toString().replaceAll(" ", "+"));
+//                hideKeyboard();
+//
+//                return true;
+//            }
+//
+//            return false;
+//        });
+
+        btnChooseSong=(Button)findViewById(R.id.btnChooseSong);
+
+        btnChooseSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SetAlarmActivity.this, SearchSongActivity.class);
+                startActivityForResult(intent, SPOTIFY_REQUEST_CODE);
+            }
+        });
 
         // calendar instance
         calendar = Calendar.getInstance();
@@ -83,14 +237,14 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         });
 
         // ringtone picker
-        ringtonePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-                startActivityForResult(intent, RINGTONE_REQUEST_CODE);
-            }
-        });
+//        ringtonePickerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+//                startActivityForResult(intent, RINGTONE_REQUEST_CODE);
+//            }
+//        });
 
         // SET ALARM
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +375,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 this.question = getString(R.string.qr_question);
                 alarm.setQuestion(this.question);
                 alarm.setAnswer(this.answer);
+            } else if (requestCode == SPOTIFY_REQUEST_CODE) {
+                AlarmItem alarmItem = (AlarmItem) data.getExtras().getSerializable("AlarmItem");
+                Log.d(TAG, String.format("AlarmItem == null? %b", alarmItem == null));
+                if (alarmItem != null) {
+                    Log.d(TAG, alarmItem.getName());
+                    setSpotifyMusic(alarmItem);
+                }
             }
         }
     }
@@ -230,7 +391,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
         ringtoneName = ringtone.getTitle(this);
 
-        ringtonePickerButton.setText(ringtoneName);
+        btnChooseSong.setText(ringtoneName);
 
         receiverIntent.putExtra("ringtoneUri", ringtoneUri.toString());
 
@@ -246,4 +407,157 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         }
         return 0;
     }
+    }
+
+    private void setSpotifyMusic(AlarmItem alarmItem) {
+        ringtoneName = alarmItem.getName();
+
+        btnChooseSong.setText(ringtoneName);
+
+        receiverIntent.putExtra("ringtoneUri", alarmItem.getTrackUri());
+    }
+
+//    @Override
+//    public void onErrorResponse(VolleyError error) {
+//
+//    }
+//
+//    //Called when a response is received.
+//    @Override
+//    public void onResponse(String response) {
+//
+//        try {
+//            JSONObject reader = new JSONObject(response);
+//            JSONObject tracks  = reader.getJSONObject("tracks");
+//            JSONArray items  = tracks.getJSONArray("items");
+//
+//            //searchResultsItems.clear();
+//            stringResults.clear();
+//
+//            for(int i = 0; i < items.length(); i++) {
+//                JSONObject result = items.getJSONObject(i);
+//                String uri = result.getString("uri");
+//                String name = result.getString("name");
+//                String artist = result.getJSONArray("artists").getJSONObject(0).getString("name");
+//                String imageUrl = result.getJSONObject("album").getJSONArray("images").getJSONObject(0).getString("url");
+//
+//                // creating a minimum AlarmItem for storing uri, image, name and artist..
+//                // the rest of the attributes will be set separately
+////                AlarmItem item = new AlarmItem(uri, imageUrl, name, artist,
+////                        0,
+////                        0,
+////                        false,
+////                        0);
+//
+//                stringResults.add(name);
+//                //searchResultsItems.add(item);
+//            }
+//
+//            try {
+//                adapterSong = new ArrayAdapter<String>(getBaseContext(),
+//                        android.R.layout.simple_dropdown_item_1line,
+//                        stringResults);
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//            }
+//
+//            txtSong.setAdapter(adapterSong);
+//
+//            adapterSong.notifyDataSetChanged();
+//
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
+//
+//    public void updateAlbumArt(String imageUrl) {
+//
+//        // setting thumbnail ..
+//        Picasso.with(getBaseContext())
+//                .load(imageUrl)
+//                .fit()
+//                .centerCrop()
+//                .into(imgAlbum, new com.squareup.picasso.Callback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        updateBackgroundColor();
+//                    }
+//                    @Override
+//                    public void onError() {
+//                        Log.e("MainActivity", "Error setting image using Picasso");
+//                    }
+//                });
+//    }
+//
+//    public void updateBackgroundColor() {
+//        Palette.PaletteAsyncListener paletteListener = new Palette.PaletteAsyncListener() {
+//            public void onGenerated(Palette p) {
+//
+//                int d = 0x0E0E0E;
+//
+//                GradientDrawable gd = new GradientDrawable(
+//                        GradientDrawable.Orientation.TOP_BOTTOM,
+//                        new int[] {p.getDarkMutedColor(d), d});
+//
+//                Drawable[] grads = {background.getBackground(), gd};
+//
+//                TransitionDrawable transitionDrawable = new TransitionDrawable(grads);
+//                background.setBackground(transitionDrawable);
+//                transitionDrawable.startTransition(500);
+//
+//            }
+//        };
+//
+//        Bitmap bitmap = ((BitmapDrawable) imgAlbum.getDrawable()).getBitmap();
+//        Palette.from(bitmap).generate(paletteListener);
+//    }
+//
+//    public void setTrackFromTitle(String title) {
+//
+//        try {
+//            JSONObject reader = new JSONObject(title);
+//            JSONObject tracks  = reader.getJSONObject("tracks");
+//            JSONArray items  = tracks.getJSONArray("items");
+//            JSONObject result = items.getJSONObject(0);
+//            String uri = result.getString("uri");
+//            String name = result.getString("name");
+//            String artist = items.getJSONObject(0).getJSONArray("artists").getJSONObject(0).getString("name");
+//            String imageUrl = result.getJSONObject("album").getJSONArray("images").getJSONObject(0).getString("url");
+//
+//            // updates UI
+//            txtSong.setText(artist + " - " + name);
+//
+//            // updates album art
+//            updateAlbumArt(imageUrl);
+//
+//            preview.setVisibility(View.VISIBLE);
+//
+//            // updates alarmItem
+////            alarmItem.setArtist(artist);
+////            alarmItem.setName(name);
+////            alarmItem.setTrackUri(uri);
+////            alarmItem.setImageUrl(imageUrl);
+//
+////            try {
+////                alarmItem.jsonify(); // updates json in alarmItem
+////            } catch (JSONException e) {}
+//
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//    public void cancelAlarm(int flag) {
+//        receiverIntent = new Intent(this, AlarmReceiver.class);
+//        pendingIntent = PendingIntent.getBroadcast(this, flag, receiverIntent, 0);
+//
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.cancel(pendingIntent);
+//
+//        finish();
+//    }
+
 }
