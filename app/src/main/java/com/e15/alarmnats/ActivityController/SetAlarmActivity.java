@@ -1,18 +1,10 @@
 package com.e15.alarmnats.ActivityController;
 
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -20,35 +12,26 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
-import android.text.Editable;
-import android.text.TextWatcher;
+//import android.support.v7.graphics.Palette;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextClock;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
 import com.e15.alarmnats.AlarmReceiver;
+import com.e15.alarmnats.Model.AlarmItem;
 import com.e15.alarmnats.R;
 import com.e15.alarmnats.TimePickerFragment;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+//import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +40,7 @@ import java.util.List;
 public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = "SetAlarmActivity";
     // declare variables
     private TextClock textViewTimePicker;
     private AutoCompleteTextView txtSong;
@@ -91,6 +75,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     private List<String> stringResults = new ArrayList<>();
 
     private static final int RINGTONE_REQUEST_CODE = 1;
+    private static final int SPOTIFY_REQUEST_CODE = 2;
     private String question = "default", answer = "default";
 
     @Override
@@ -100,7 +85,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
         // initialize variables
         textViewTimePicker = findViewById(R.id.text_view_time_picker);
-        ringtonePickerButton = findViewById(R.id.button_rigtone_picker);
+//        ringtonePickerButton = findViewById(R.id.button_rigtone_picker);
         label = findViewById(R.id.textbox_label);
         setAlarmButton = findViewById(R.id.button_start_alarm);
 
@@ -223,8 +208,8 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         btnChooseSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(SetAlarmActivity.this,DisplaySearchSong.class);
-                startActivity(intent);
+                Intent intent = new Intent(SetAlarmActivity.this, SearchSongActivity.class);
+                startActivityForResult(intent, SPOTIFY_REQUEST_CODE);
             }
         });
 
@@ -249,14 +234,14 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         });
 
         // ringtone picker
-        ringtonePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-                startActivityForResult(intent, RINGTONE_REQUEST_CODE);
-            }
-        });
+//        ringtonePickerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+//                startActivityForResult(intent, RINGTONE_REQUEST_CODE);
+//            }
+//        });
 
         // SET ALARM
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
@@ -370,6 +355,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
                 setRingtone(ringtoneUri);
             } else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
                 this.answer = data.getStringExtra("code");
+            } else if (requestCode == SPOTIFY_REQUEST_CODE) {
+                AlarmItem alarmItem = (AlarmItem) data.getExtras().getSerializable("AlarmItem");
+                Log.d(TAG, String.format("AlarmItem == null? %b", alarmItem == null));
+                if (alarmItem != null) {
+                    Log.d(TAG, alarmItem.getName());
+                    setSpotifyMusic(alarmItem);
+                }
             }
         }
     }
@@ -379,10 +371,17 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
         ringtoneName = ringtone.getTitle(this);
 
-        ringtonePickerButton.setText(ringtoneName);
+        btnChooseSong.setText(ringtoneName);
 
         receiverIntent.putExtra("ringtoneUri", ringtoneUri.toString());
+    }
 
+    private void setSpotifyMusic(AlarmItem alarmItem) {
+        ringtoneName = alarmItem.getName();
+
+        btnChooseSong.setText(ringtoneName);
+
+        receiverIntent.putExtra("ringtoneUri", alarmItem.getTrackUri());
     }
 
 //    @Override

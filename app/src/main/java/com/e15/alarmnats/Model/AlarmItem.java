@@ -3,11 +3,13 @@ package com.e15.alarmnats.Model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by mikael on 2017-06-05.
  */
 
-public class AlarmItem implements Cloneable {
+public class AlarmItem implements Cloneable, Serializable {
     private String trackUri;
     private String imageUrl;
     private String name;

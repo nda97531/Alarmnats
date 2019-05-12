@@ -61,6 +61,7 @@ import java.util.Map;
 
 public class AddFragment extends Fragment implements Response.Listener<String>, Response.ErrorListener {
 
+    private static final String TAG = "AddFragment";
     private boolean editing;
 
     private RelativeLayout background;
@@ -80,7 +81,9 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
     public interface AddFragmentListener {
         void saveClicked(AlarmItem item);
+
         void deleteClicked(AlarmItem item);
+
         void updateAlarm(AlarmItem oldAlarm, AlarmItem newAlarm);
     }
 
@@ -90,8 +93,8 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context.getClass() == MainActivity.class) {
-            Log.d("MainActivity", "Correct class");
+        if (context.getClass() == SearchSongActivity.class) {
+            Log.d("SearchSongActivity", "Correct class");
             listener = (AddFragmentListener) context;
         }
 
@@ -183,7 +186,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
         trackField = (AutoCompleteTextView) view.findViewById(R.id.track_field);
         trackField.setAdapter(searchAdapter);
 
-        if(editing) {
+        if (editing) {
             updateAlbumArt(oldAlarmItem.getImageUrl());
             trackField.setText(oldAlarmItem.getArtist() + " - " + oldAlarmItem.getName());
             timeText.setText(oldAlarmItem.getFormatedTime());
@@ -196,23 +199,25 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
         // when users enters text, suggest new songs..
         trackField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
 
                 // if the change is due to the user clicking a suggested song, don't suggest more
-                if(itemClicked) {
+
+                if (itemClicked) {
                     itemClicked = false;
                     return;
                 }
-
+                Log.d(TAG, "afterTextChanged");
                 // when users enters another character..
                 updateSongs(trackField.getText().toString());
-
             }
         });
 
@@ -254,10 +259,10 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
             @Override
             public boolean onKey(View view1, int keyCode, KeyEvent keyEvent) {
 
-                itemClicked = true;
 
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    itemClicked = true;
 
                     // Perform search on enter press
                     AddFragment.this.searchTrack(trackField.getText().toString().replaceAll(" ", "+"));
@@ -284,12 +289,12 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
     }
 
     // searches for track with http GET
-    @RequiresApi(api = Build.VERSION_CODES.M)
+//    @RequiresApi(api = Build.VERSION_CODES.M)
     public void searchTrack(String trackName) {
 
 
         // if trackname is too short, do nothing
-        if(trackName.length() < 3)
+        if (trackName.length() < 3)
             return;
 
         String url = "https://api.spotify.com/v1/search?q=" + trackName + "&type=track&limit=1";
@@ -304,15 +309,18 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
                         AddFragment.this.setTrackFromTitle(response);
                     }
                 },
-                this){@Override public Map<String, String> getHeaders() {
+                this) {
+            @Override
+            public Map<String, String> getHeaders() {
 
-            SharedPreferences prefs = getContext().getSharedPreferences("com.e15.alarmnats", Context.MODE_PRIVATE);
-            String token = prefs.getString("com.e15.alarmnats.token", "");
+                SharedPreferences prefs = getContext().getSharedPreferences(getString(R.string.tag_sharedprefs), Context.MODE_PRIVATE);
+                String token = prefs.getString(getString(R.string.tag_sharedpref_token), "");
 
-            Map<String, String> params = new HashMap<>();
-            params.put("Authorization", "Bearer " + token);
-            return params;
-        }};
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + token);
+                return params;
+            }
+        };
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
@@ -323,13 +331,13 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
         final List<String> songs = new ArrayList<>();
 
         // if input is too short, return empty array
-        if(input.length() < 3)
+        if (input.length() < 3)
             return songs;
 
         String url = "https://api.spotify.com/v1/search?q=" + input.replaceAll(" ", "+") + "&type=track&limit=3";
 
-        SharedPreferences prefs = getContext().getSharedPreferences("com.e15.alarmnats", Context.MODE_PRIVATE);
-        String token = prefs.getString("com.e15.alarmnats.token", "");
+        SharedPreferences prefs = getContext().getSharedPreferences(getString(R.string.tag_sharedprefs), Context.MODE_PRIVATE);
+        String token = prefs.getString(getString(R.string.tag_sharedpref_token), "");
 
         Log.d("MainActivity", "url: " + url);
         Log.d("MainActivity", "token: " + token);
@@ -337,16 +345,18 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this
-        ){@Override public Map<String, String> getHeaders() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this) {
+            @Override
+            public Map<String, String> getHeaders() {
 
-            SharedPreferences prefs = getContext().getSharedPreferences("com.e15.alarmnats", Context.MODE_PRIVATE);
-            String token = prefs.getString("com.e15.alarmnats.token", "");
+                SharedPreferences prefs = getContext().getSharedPreferences(getString(R.string.tag_sharedprefs), Context.MODE_PRIVATE);
+                String token = prefs.getString(getString(R.string.tag_sharedpref_token), "");
 
-            Map<String, String> params = new HashMap<>();
-            params.put("Authorization", "Bearer " + token);
-            return params;
-        }};
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + token);
+                return params;
+            }
+        };
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
@@ -359,13 +369,13 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
         try {
             JSONObject reader = new JSONObject(response);
-            JSONObject tracks  = reader.getJSONObject("tracks");
-            JSONArray items  = tracks.getJSONArray("items");
+            JSONObject tracks = reader.getJSONObject("tracks");
+            JSONArray items = tracks.getJSONArray("items");
 
             searchResultsItems.clear();
             stringResults.clear();
 
-            for(int i = 0; i < items.length(); i++) {
+            for (int i = 0; i < items.length(); i++) {
                 JSONObject result = items.getJSONObject(i);
                 String uri = result.getString("uri");
                 String name = result.getString("name");
@@ -380,7 +390,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
                         false,
                         0);
 
-                stringResults.add(name);
+                stringResults.add(String.format("%s - %s", artist, name));
                 searchResultsItems.add(item);
             }
 
@@ -403,7 +413,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
     }
 
     public void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
@@ -417,8 +427,8 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
         try {
             JSONObject reader = new JSONObject(title);
-            JSONObject tracks  = reader.getJSONObject("tracks");
-            JSONArray items  = tracks.getJSONArray("items");
+            JSONObject tracks = reader.getJSONObject("tracks");
+            JSONArray items = tracks.getJSONArray("items");
             JSONObject result = items.getJSONObject(0);
             String uri = result.getString("uri");
             String name = result.getString("name");
@@ -441,7 +451,8 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
             try {
                 alarmItem.jsonify(); // updates json in alarmItem
-            } catch (JSONException e) {}
+            } catch (JSONException e) {
+            }
 
 
         } catch (JSONException e) {
@@ -451,6 +462,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
     /**
      * Updates album art and updates background color gradient based on image
+     *
      * @param imageUrl image url to load as album art
      */
     public void updateAlbumArt(String imageUrl) {
@@ -465,6 +477,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
                     public void onSuccess() {
                         updateBackgroundColor();
                     }
+
                     @Override
                     public void onError() {
                         Log.e("MainActivity", "Error setting image using Picasso");
@@ -483,7 +496,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
                 GradientDrawable gd = new GradientDrawable(
                         GradientDrawable.Orientation.TOP_BOTTOM,
-                        new int[] {p.getDarkMutedColor(d), d});
+                        new int[]{p.getDarkMutedColor(d), d});
 
                 Drawable[] grads = {background.getBackground(), gd};
 

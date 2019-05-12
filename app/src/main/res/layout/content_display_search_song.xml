@@ -6,7 +6,7 @@
     android:background="#000"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context="com.e15.alarmnats.ActivityController.DisplaySearchSong">
+    tools:context="com.e15.alarmnats.ActivityController.SearchSongActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
