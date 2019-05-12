@@ -10,10 +10,19 @@
     <string name="default_question">Default</string>
     <string name="qr_question">QR code</string>
     <string name="math_question">Math problem</string>
+    <string name="ok">OK</string>
+    <string name="zero_o_clock">00:00</string>
+    <string name="x_y_z">x*y+z</string>
+    <string name="weather">Weather</string>
+    <string name="choose_ringtone">Choose ringtone</string>
+    <string name="label">Label</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="verify_recaptcha">Verify reCaptcha</string>
     <string-array name="question_list">
         <item>@string/default_question</item>
         <item>@string/qr_question</item>
         <item>@string/math_question</item>
+        <item>@string/verify_recaptcha</item>
     </string-array>
 
 </resources>

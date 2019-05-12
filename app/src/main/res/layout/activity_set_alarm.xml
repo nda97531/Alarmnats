@@ -25,7 +25,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:text="choose ringtone" />
+        android:text="@string/choose_ringtone" />
 
     <EditText
         android:id="@+id/textbox_label"
@@ -35,7 +35,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Label"
+        android:hint="@string/label"
         android:inputType="text" />
 
     <Spinner
@@ -53,7 +53,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Set Alarm" />
+        android:text="@string/set_alarm" />
 
 
 </LinearLayout>

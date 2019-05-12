@@ -186,6 +186,11 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             this.question = selected;
             alarm.setQuestion(this.question);
             alarm.setAnswer(this.answer);
+        } else if (selected.equals(getString(R.string.verify_recaptcha))) {
+            this.answer = "default";
+            this.question = selected;
+            alarm.setQuestion(this.question);
+            alarm.setAnswer(this.answer);
         }
     }
 

@@ -37,7 +37,7 @@ public class MathTestActivity extends AppCompatActivity {
         math_question.setText(x + " x " + y + " + " + z + " = ");
     }
 
-    protected void submitBtnClick(View view) {
+    public void submitBtnClick(View view) {
         try {
             int user_answer = Integer.parseInt(math_answer.getText().toString());
             if (user_answer == x * y + z) {
@@ -51,4 +51,5 @@ public class MathTestActivity extends AppCompatActivity {
             Toast.makeText(this, "Wrong answer!!", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

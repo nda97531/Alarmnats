@@ -49,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Intent alarmIntent;
 
-    private static final int SET_ALARM_INTENET_REQUEST_CODE = 1;
+    private static final int SET_ALARM_INTENT_REQUEST_CODE = 1;
     public static final int SCAN_QR_CODE_INTENT_REQUEST_CODE = 100;
     public static final int MATH_TEST_INTENT_REQUEST_CODE = 200;
-    public static final int EDIT_ALARM_INTENET_REQUEST_CODE = 300;
+    public static final int VERIFY_CAPTCHA_INTENT_REQUEST_CODE = 201;
+    public static final int EDIT_ALARM_INTENT_REQUEST_CODE = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent setAlarmIntent = new Intent(MainActivity.this, SetAlarmActivity.class);
                 setAlarmIntent.putExtra("alarmObject", alarm);
                 setAlarmIntent.putExtra("isNewAlarm", true);
-                MainActivity.this.startActivityForResult(setAlarmIntent, SET_ALARM_INTENET_REQUEST_CODE);
+                MainActivity.this.startActivityForResult(setAlarmIntent, SET_ALARM_INTENT_REQUEST_CODE);
             }
         });
 
@@ -101,10 +102,10 @@ public class MainActivity extends AppCompatActivity {
         adapter.onRecAdapterActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             alarm = (Alarm) data.getSerializableExtra("alarmObject");
-            if (requestCode == SET_ALARM_INTENET_REQUEST_CODE) {
+            if (requestCode == SET_ALARM_INTENT_REQUEST_CODE) {
                 dbHelper.addAlarm(alarm);
                 getAlarms();
-            } else if (requestCode == EDIT_ALARM_INTENET_REQUEST_CODE) {
+            } else if (requestCode == EDIT_ALARM_INTENT_REQUEST_CODE) {
                 dbHelper.updateAlarm(alarm);
                 getAlarms();
             }
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SetAlarmActivity.class);
         intent.putExtra("alarmObject", alarm);
         intent.putExtra("isNewAlarm", false);
-        startActivityForResult(intent, EDIT_ALARM_INTENET_REQUEST_CODE);
+        startActivityForResult(intent, EDIT_ALARM_INTENT_REQUEST_CODE);
     }
 
     public Alarm defaultAlarmObject() {

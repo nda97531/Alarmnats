@@ -67,8 +67,11 @@ public class AlarmFiredActivity extends AppCompatActivity {
         } else if (question.equals(getString(R.string.math_question))) {
             Intent intent = new Intent(this, MathTestActivity.class);
             startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
+        } else if (question.equals(getString(R.string.verify_recaptcha))) {
+            Intent intent = new Intent(this, RecaptchaActivity.class);
+            startActivityForResult(intent, MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
         } else {
-            //Default
+            // Default
         }
     }
 
@@ -76,7 +79,8 @@ public class AlarmFiredActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE
-                    || requestCode == MainActivity.MATH_TEST_INTENT_REQUEST_CODE) {
+                    || requestCode == MainActivity.MATH_TEST_INTENT_REQUEST_CODE
+                    || requestCode == MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE) {
                 finishActivity();
             }
         }
