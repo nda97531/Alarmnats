@@ -18,14 +18,51 @@
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Display2" />
 
-    <Button
-        android:id="@+id/button_rigtone_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="choose ringtone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/button_rigtone_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="choose ringtone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgAlbum"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            android:background="@color/black_overlay" />
+
+        <AutoCompleteTextView
+            android:id="@+id/txtSong"
+            android:layout_width="218dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/preview"
+            android:layout_width="13dp"
+            android:layout_height="14dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/txtSong"
+            android:clickable="true"
+            android:src="@drawable/ic_volume_up_white_24dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/textbox_label"
@@ -45,6 +82,15 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/btnChooseSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Choose Song" />
 
     <Button
         android:id="@+id/button_start_alarm"
