@@ -304,7 +304,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         // show old data
         textViewTimePicker.setText(alarm.getAlarmTime());
 
-        ringtonePickerButton.setText(alarm.getRingtoneName());
+//        ringtonePickerButton.setText(alarm.getRingtoneName());
 
         label.setText(alarm.getLabel());
 
@@ -406,7 +406,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             return 2;
         }
         return 0;
-    }
     }
 
     private void setSpotifyMusic(AlarmItem alarmItem) {

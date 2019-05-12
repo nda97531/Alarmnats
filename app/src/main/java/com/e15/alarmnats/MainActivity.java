@@ -19,7 +19,7 @@ import com.e15.alarmnats.ActivityController.SetAlarmActivity;
 import com.e15.alarmnats.ActivityController.WeatherActivity;
 import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.Database.AlarmDbHelper;
-import com.e15.alarmnats.ViewSupport.RecylcerViewAdapter;
+import com.e15.alarmnats.ViewSupport.RecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> mQuestions = new ArrayList<>();
     private ArrayList<Integer> mFlags = new ArrayList<>();
 
-    private RecylcerViewAdapter adapter;
+    private RecyclerViewAdapter adapter;
 
     private Intent alarmIntent;
 
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     // initialize recycler view
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        adapter = new RecylcerViewAdapter(mAlarmTimes,
+        adapter = new RecyclerViewAdapter(mAlarmTimes,
                 mAlarmTimesInMillis,
                 mAlarmStatuses,
                 mRingtoneNames,

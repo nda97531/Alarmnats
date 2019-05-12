@@ -21,7 +21,7 @@ import com.e15.alarmnats.R;
 
 import java.util.ArrayList;
 
-public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private static final int RINGTONE_REQUEST_CODE = 1;
 
@@ -38,7 +38,7 @@ public class RecylcerViewAdapter extends RecyclerView.Adapter<RecylcerViewAdapte
     private ArrayList<Integer> mFlags = new ArrayList<>();
     private Context mContext;
 
-    public RecylcerViewAdapter(ArrayList<String> mAlarmTimes,
+    public RecyclerViewAdapter(ArrayList<String> mAlarmTimes,
                                ArrayList<Long> mAlarmTimesInMillis,
                                ArrayList<Boolean> mAlarmStatuses,
                                ArrayList<String> mRingtoneNames,
