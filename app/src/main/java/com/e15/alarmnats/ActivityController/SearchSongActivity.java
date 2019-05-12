@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.e15.alarmnats.Model.AlarmItem;
 import com.e15.alarmnats.R;
+import com.e15.alarmnats.ViewSupport.AddFragment;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;

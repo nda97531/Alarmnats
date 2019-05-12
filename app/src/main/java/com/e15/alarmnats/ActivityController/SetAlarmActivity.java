@@ -81,11 +81,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     private Alarm alarm;
     private static final int SPOTIFY_REQUEST_CODE = 2;
+    private boolean marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
+        marker = true;
 
         alarm = (Alarm) getIntent().getSerializableExtra("alarmObject");
 
@@ -277,7 +279,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
                 alarm.setAlarmTimeInMillis(calendar.getTimeInMillis());
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 //                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
                 /// send result to mainActivity
@@ -325,6 +327,11 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     //spinner callback
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(marker){
+            marker= false;
+            return;
+        }
+
         String selected = (String) question_spinner.getSelectedItem();
 
         if (selected.equals(getString(R.string.default_question))) {
@@ -334,6 +341,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             alarm.setAnswer(this.answer);
         } else if (selected.equals(getString(R.string.qr_question))) {
             Intent intent = new Intent(this, QRscanActivity.class);
+            intent.putExtra("isSettingNewAlarm", true);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else if (selected.equals(getString(R.string.math_question))) { //continue here
             this.answer = "default";

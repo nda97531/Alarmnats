@@ -1,4 +1,4 @@
-package com.e15.alarmnats.ActivityController;
+package com.e15.alarmnats.ViewSupport;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -41,6 +41,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e15.alarmnats.ActivityController.SearchSongActivity;
 import com.e15.alarmnats.Model.AlarmItem;
 
 import com.e15.alarmnats.R;
@@ -55,9 +56,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by mikael on 2017-06-05.
- */
 
 public class AddFragment extends Fragment implements Response.Listener<String>, Response.ErrorListener {
 
@@ -110,33 +108,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
     }
 
     private void initUI(View view) {
-
-        TextView titleText = (TextView) view.findViewById(R.id.title_text);
         albumImage = (ImageView) view.findViewById(R.id.album_image);
-
-        TextView cancelButton = (TextView) view.findViewById(R.id.cancel_button);
-        TextView deleteButton = (TextView) view.findViewById(R.id.delete_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view16) {
-                AddFragment.this.cancelDeleteClicked();
-            }
-        });
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view17) {
-                AddFragment.this.deleteButtonClicked();
-            }
-        });
-
-        ImageView backButton = (ImageView) view.findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view15) {
-                AddFragment.this.exitFragment();
-            }
-        });
-
         Button saveButton = (Button) view.findViewById(R.id.addBtn);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -160,25 +132,6 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
         background = (RelativeLayout) view.findViewById(R.id.add_background);
 
-        timeText = (TextView) view.findViewById(R.id.time_text);
-        timeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view14) {
-                TimePickerFragment dialog = new TimePickerFragment();
-                dialog.setTimeText(timeText);
-                dialog.setAlarmItem(alarmItem);
-                dialog.show(AddFragment.this.getFragmentManager(), "timePicker");
-            }
-        });
-
-        view.findViewById(R.id.clock_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view13) {
-                // Todo open time picker
-            }
-        });
-
-
         searchAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 stringResults);
@@ -190,10 +143,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
             updateAlbumArt(oldAlarmItem.getImageUrl());
             trackField.setText(oldAlarmItem.getArtist() + " - " + oldAlarmItem.getName());
             timeText.setText(oldAlarmItem.getFormatedTime());
-            titleText.setText("Edit alarm");
             saveButton.setText("Save alarm");
-            cancelButton.setVisibility(View.GONE);
-            deleteButton.setVisibility(View.VISIBLE);
         }
 
         // when users enters text, suggest new songs..

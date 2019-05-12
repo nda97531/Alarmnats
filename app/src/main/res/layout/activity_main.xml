@@ -19,14 +19,6 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/btnWth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/recycler_view"
-            android:layout_marginTop="-69dp"
-            android:text="Display Weather" />
-
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton

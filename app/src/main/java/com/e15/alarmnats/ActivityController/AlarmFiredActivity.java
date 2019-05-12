@@ -2,13 +2,12 @@ package com.e15.alarmnats.ActivityController;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -36,7 +35,7 @@ public class AlarmFiredActivity extends AppCompatActivity
 
     MediaPlayer mediaPlayer;
     private Player spotifyPlayer;
-    private String ringtone;
+    private String ringtone, question, answer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +82,15 @@ public class AlarmFiredActivity extends AppCompatActivity
             }
         }
 
-        String question = getIntent().getExtras().getString("question");
-        String answer = getIntent().getExtras().getString("answer");
+        question = getIntent().getExtras().getString("question");
+        answer = getIntent().getExtras().getString("answer");
 
+        startQuestion();
+    }
+    private void startQuestion(){
         if (question.equals(getString(R.string.qr_question))) {
-            Intent intent = new Intent(this, QRtestActivity.class);
+            Intent intent = new Intent(this, QRscanActivity.class);
+            intent.putExtra("isSettingNewAlarm", false);
             intent.putExtra("answer", answer);
             startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else if (question.equals(getString(R.string.math_question))) {
@@ -166,6 +169,7 @@ public class AlarmFiredActivity extends AppCompatActivity
                 }
             }
         }
+        else startQuestion();
     }
 
     protected void onBtnDismissClick(View view) {
