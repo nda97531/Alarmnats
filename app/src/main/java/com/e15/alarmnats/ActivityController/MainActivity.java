@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.Database.AlarmDbHelper;
@@ -47,10 +48,26 @@ public class MainActivity extends AppCompatActivity {
     public static final int SCAN_QR_CODE_INTENT_REQUEST_CODE = 100;
     public static final int MATH_TEST_INTENT_REQUEST_CODE = 200;
 
+    private Button btnWth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Weather
+        Button buttonWth=findViewById(R.id.btnWth);
+
+        buttonWth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(MainActivity.this,WeatherActivity.class);
+
+                startActivity(intent);
+
+            }
+        });
 
         // database helper
         dbHelper = AlarmDbHelper.getInstance(this);
