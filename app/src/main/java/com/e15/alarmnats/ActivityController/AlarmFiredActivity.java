@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.R;
 
 public class AlarmFiredActivity extends AppCompatActivity {

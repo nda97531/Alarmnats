@@ -23,9 +23,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.e15.alarmnats.AlarmReceiver;
+import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.R;
-import com.e15.alarmnats.TimePickerFragment;
+import com.e15.alarmnats.ViewSupport.TimePickerFragment;
 
 import java.util.Calendar;
 

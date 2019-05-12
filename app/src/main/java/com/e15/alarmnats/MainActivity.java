@@ -1,4 +1,4 @@
-package com.e15.alarmnats.ActivityController;
+package com.e15.alarmnats;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -13,12 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
+import com.e15.alarmnats.ActivityController.SetAlarmActivity;
+import com.e15.alarmnats.ActivityController.WeatherActivity;
 import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.Database.AlarmDbHelper;
-import com.e15.alarmnats.AlarmReceiver;
-import com.e15.alarmnats.R;
-import com.e15.alarmnats.RecylcerViewAdapter;
+import com.e15.alarmnats.ViewSupport.RecylcerViewAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     // variable declarations
     private FloatingActionButton addAlarmButton;
+    private Button weatherButton;
 
     private AlarmDbHelper dbHelper;
     private Alarm alarm;
@@ -82,6 +84,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        weatherButton = findViewById(R.id.weatherButton);
+
+        weatherButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, WeatherActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     // get result from new alarm activity

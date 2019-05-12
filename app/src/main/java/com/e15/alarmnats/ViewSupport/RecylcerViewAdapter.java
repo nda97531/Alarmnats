@@ -1,4 +1,4 @@
-package com.e15.alarmnats;
+package com.e15.alarmnats.ViewSupport;
 
 import android.app.AlarmManager;
 import android.content.Context;
@@ -16,7 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.e15.alarmnats.ActivityController.MainActivity;
+import com.e15.alarmnats.MainActivity;
+import com.e15.alarmnats.R;
 
 import java.util.ArrayList;
 
