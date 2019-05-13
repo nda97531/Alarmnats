@@ -35,7 +35,8 @@
                 android:hint="Add song"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:textColor="#F0FFFF"
+                android:textColor="#ccffeb"
+                android:textColorHint="#00995c"
                 android:textSize="20sp" />
 
             <ImageView

@@ -43,6 +43,10 @@ public class AlarmItem implements Cloneable, Serializable {
         }
     }
 
+    public AlarmItem(String trackUri, String name) {
+        this.trackUri = trackUri;
+        this.name = name;
+    }
     // generates json from all class attributes
     public void jsonify() throws JSONException{
 

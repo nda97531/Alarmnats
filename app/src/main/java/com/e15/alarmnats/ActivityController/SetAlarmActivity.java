@@ -313,7 +313,10 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         question_spinner.setSelection(getQuestionPosition(alarm.getQuestion()));
 
         ringtoneUri = Uri.parse(alarm.getRingtoneUri());
-        setRingtone(ringtoneUri);
+        if (ringtoneUri.toString().split(":")[0].equals("spotify"))
+            setSpotifyMusic(new AlarmItem(ringtoneUri.toString(), alarm.getRingtoneName()));
+        else
+            setRingtone(ringtoneUri);
     }
 
     // create pending intent
@@ -424,6 +427,9 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         btnChooseSong.setText(ringtoneName);
 
         receiverIntent.putExtra("ringtoneUri", alarmItem.getTrackUri());
+
+        alarm.setRingtoneUri(alarmItem.getTrackUri());
+        alarm.setRingtoneName(ringtoneName);
     }
 
 //    @Override

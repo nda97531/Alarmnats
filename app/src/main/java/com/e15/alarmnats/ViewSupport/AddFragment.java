@@ -33,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,7 +42,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.e15.alarmnats.ActivityController.SearchSongActivity;
 import com.e15.alarmnats.Model.AlarmItem;
-
 import com.e15.alarmnats.R;
 import com.squareup.picasso.Picasso;
 
@@ -464,7 +462,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e("MainActivity", error.toString());
-        Toast.makeText(getContext(), "Lỗi mạng!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(, "Lỗi mạng!", Toast.LENGTH_SHORT).show();
 
     }
 

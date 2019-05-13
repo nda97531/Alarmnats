@@ -179,7 +179,9 @@ public class AlarmFiredActivity extends AppCompatActivity
     private void finishActivity() {
         if (mediaPlayer != null)
             mediaPlayer.stop();
-        spotifyPlayer.pause();
+        if (spotifyPlayer != null)
+            spotifyPlayer.pause();
+
         finish();
     }
 
