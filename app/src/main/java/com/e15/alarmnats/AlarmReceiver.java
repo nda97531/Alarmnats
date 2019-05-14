@@ -11,8 +11,6 @@ import com.e15.alarmnats.ActivityController.AlarmFiredActivity;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("receive @@");
-
         try {
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
                     || intent.getAction().equals("com.mine.alarm")) {

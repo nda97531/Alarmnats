@@ -88,6 +88,7 @@ public class QRscanActivity extends AppCompatActivity {
                         finish();
                     }
                     else if (getIntent().getExtras().getString("answer").equals(thisCode)) {
+                        System.out.println("scan finished!!");
                         Intent returnIntent = new Intent();
                         setResult(Activity.RESULT_OK, returnIntent);
                         finish();

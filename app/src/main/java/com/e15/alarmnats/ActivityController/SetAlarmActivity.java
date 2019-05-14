@@ -1,18 +1,21 @@
 package com.e15.alarmnats.ActivityController;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-//import android.support.v7.graphics.Palette;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,21 +25,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-// import android.widget.TextClock;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-//import com.android.volley.Response;
-//import com.android.volley.VolleyError;
 import com.e15.alarmnats.AlarmReceiver;
 import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.Model.Alarm;
+import com.e15.alarmnats.Model.AlarmItem;
 import com.e15.alarmnats.R;
 import com.e15.alarmnats.ViewSupport.TimePickerFragment;
-import com.e15.alarmnats.Model.AlarmItem;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+//import android.support.v7.graphics.Palette;
+// import android.widget.TextClock;
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
 
 public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         AdapterView.OnItemSelectedListener {
@@ -321,8 +327,8 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     // create pending intent
     private void setPendingIntent(int flag_id) {
-        receiverIntent.putExtra("question", this.question);
-        receiverIntent.putExtra("answer", this.answer);
+        receiverIntent.putExtra("question", alarm.getQuestion());
+        receiverIntent.putExtra("answer", alarm.getAnswer());
 
         this.pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag_id, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -342,16 +348,26 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             this.question = selected;
             alarm.setQuestion(this.question);
             alarm.setAnswer(this.answer);
-        } else if (selected.equals(getString(R.string.qr_question))) {
-            Intent intent = new Intent(this, QRscanActivity.class);
-            intent.putExtra("isSettingNewAlarm", true);
-            startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
-        } else if (selected.equals(getString(R.string.math_question))) { //continue here
+        }
+        else if (selected.equals(getString(R.string.qr_question))) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                System.out.println("permission!!");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                        MainActivity.CAMERA_PERMISSION_REQUEST_CODE);
+            }
+            else {
+                Intent intent = new Intent(this, QRscanActivity.class);
+                intent.putExtra("isSettingNewAlarm", true);
+                startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+            }
+        }
+        else if (selected.equals(getString(R.string.math_question))) { //continue here
             this.answer = "default";
             this.question = selected;
             alarm.setQuestion(this.question);
             alarm.setAnswer(this.answer);
-        } else if (selected.equals(getString(R.string.verify_recaptcha))) {
+        }
+        else if (selected.equals(getString(R.string.verify_recaptcha))) {
             this.answer = "default";
             this.question = selected;
             alarm.setQuestion(this.question);
@@ -369,7 +385,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         textViewTimePicker.setText(hourOfDay + ":" + minute);
-        System.out.println("set time callback");
 
         receiverIntent.putExtra("alarmTime", textViewTimePicker.getText());
     }
@@ -378,22 +393,46 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == RINGTONE_REQUEST_CODE) {
-                ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                setRingtone(ringtoneUri);
-            } else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE) {
-                this.answer = data.getStringExtra("code");
-                this.question = getString(R.string.qr_question);
-                alarm.setQuestion(this.question);
-                alarm.setAnswer(this.answer);
-            } else if (requestCode == SPOTIFY_REQUEST_CODE) {
-                AlarmItem alarmItem = (AlarmItem) data.getExtras().getSerializable("AlarmItem");
-                Log.d(TAG, String.format("AlarmItem == null? %b", alarmItem == null));
-                if (alarmItem != null) {
-                    Log.d(TAG, alarmItem.getName());
-                    setSpotifyMusic(alarmItem);
+            switch(requestCode){
+                case RINGTONE_REQUEST_CODE: {
+                    ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    setRingtone(ringtoneUri);
+                    break;
                 }
+                case SPOTIFY_REQUEST_CODE: {
+                    AlarmItem alarmItem = (AlarmItem) data.getExtras().getSerializable("AlarmItem");
+                    Log.d(TAG, String.format("AlarmItem == null? %b", alarmItem == null));
+                    if (alarmItem != null) {
+                        Log.d(TAG, alarmItem.getName());
+                        setSpotifyMusic(alarmItem);
+                    }
+                    break;
+                }
+                case MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE: {
+                    this.answer = data.getStringExtra("code");
+                    this.question = getString(R.string.qr_question);
+                    alarm.setQuestion(this.question);
+                    alarm.setAnswer(this.answer);
+                    break;
+                }
+                default:
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode== MainActivity.CAMERA_PERMISSION_REQUEST_CODE) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, QRscanActivity.class);
+                intent.putExtra("isSettingNewAlarm", true);
+                startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+            } else {
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+            }
+            return;
         }
     }
 

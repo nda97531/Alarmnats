@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int MATH_TEST_INTENT_REQUEST_CODE = 200;
     public static final int VERIFY_CAPTCHA_INTENT_REQUEST_CODE = 201;
     public static final int EDIT_ALARM_INTENT_REQUEST_CODE = 300;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 301;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         getAlarms();
 
         // intent to pass to broadcast receiver
-        System.out.println("ringgg!!!");
         alarmIntent = new Intent(this, AlarmReceiver.class);
 
         addAlarmButton = findViewById(R.id.addAlarmButton);
@@ -171,10 +171,9 @@ public class MainActivity extends AppCompatActivity {
         Intent receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pendingIntent);
-        System.out.println("canceled");
 
         if (changeStatus) {
-            System.out.println("number switch off: " + dbHelper.updateStatus(flag, 0));
+            dbHelper.updateStatus(flag, 0);
         }
     }
 
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), flag, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getAlarmTimeInMillis(), pendingIntent);
-        System.out.println("number switch on: " + dbHelper.updateStatus(flag, 1));
+        dbHelper.updateStatus(flag, 1);
     }
 
     //edit alarm

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.R;
@@ -42,7 +43,8 @@ public class AlarmFiredActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_fired);
 
-        authSpotify();
+        question = getIntent().getExtras().getString("question");
+        answer = getIntent().getExtras().getString("answer");
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
@@ -64,7 +66,8 @@ public class AlarmFiredActivity extends AppCompatActivity
 
         Uri ringtoneUri = Uri.parse(ringtone);
         if (ringtone.split(":")[0].equals("spotify")) {
-
+            System.out.println("soundtrack on spotify");
+            authSpotify();
         } else {
             mediaPlayer = new MediaPlayer();
             try {
@@ -77,16 +80,14 @@ public class AlarmFiredActivity extends AppCompatActivity
                     mediaPlayer.start();
                 }
 
+                startQuestion();
+
             } catch (Exception e) {
                 Log.e("media exception", e.toString());
             }
         }
-
-        question = getIntent().getExtras().getString("question");
-        answer = getIntent().getExtras().getString("answer");
-
-        startQuestion();
     }
+
     private void startQuestion(){
         if (question.equals(getString(R.string.qr_question))) {
             Intent intent = new Intent(this, QRscanActivity.class);
@@ -101,6 +102,13 @@ public class AlarmFiredActivity extends AppCompatActivity
             startActivityForResult(intent, MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
         } else {
             // Default
+            Button dismissBtn = (Button) findViewById(R.id.button_dismiss);
+            dismissBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finishActivity();
+                }
+            });
         }
     }
     // authorizes user towards Spotify, this is called if initPlayer fails to fetch the player
@@ -127,11 +135,7 @@ public class AlarmFiredActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE
-                    || requestCode == MainActivity.MATH_TEST_INTENT_REQUEST_CODE
-                    || requestCode == MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE) {
-                finishActivity();
-            } else if (requestCode == REQUEST_CODE) {
+            if (requestCode == REQUEST_CODE) {
 
                 AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
 
@@ -147,6 +151,7 @@ public class AlarmFiredActivity extends AppCompatActivity
                             spotifyPlayer = player;
                             spotifyPlayer.addConnectionStateCallback(AlarmFiredActivity.this);
                             spotifyPlayer.addPlayerNotificationCallback(AlarmFiredActivity.this);
+                            System.out.println("auth complete");
                         }
 
                         @Override
@@ -168,6 +173,11 @@ public class AlarmFiredActivity extends AppCompatActivity
 
                 }
             }
+            else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE
+                    || requestCode == MainActivity.MATH_TEST_INTENT_REQUEST_CODE
+                    || requestCode == MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE) {
+                finishActivity();
+            }
         }
         else startQuestion();
     }
@@ -188,7 +198,9 @@ public class AlarmFiredActivity extends AppCompatActivity
     @Override
     public void onLoggedIn() {
         // Plays song as soon as auth is done and user is logged in
+        System.out.println("now playing");
         spotifyPlayer.play(ringtone);
+        startQuestion();
     }
 
     @Override
