@@ -28,7 +28,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.e15.alarmnats.AlarmReceiver;
-import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.Model.AlarmItem;
 import com.e15.alarmnats.R;
@@ -192,7 +191,7 @@ public class SetAlarmActivity extends AppCompatActivity{
 //            try {
 //                alarmItem.jsonify(); // updates json in alarmItem
 //            } catch (JSONException e) {
-//                Log.e("MainActivity", "error converting into json");
+//                Log.e("AlarmListActivity", "error converting into json");
 //                e.printStackTrace();}
 //
 //            // updates UI
@@ -230,16 +229,6 @@ public class SetAlarmActivity extends AppCompatActivity{
         receiverIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         receiverIntent.putExtra("alarmTime", alarm.getAlarmTime());
 
-        // tvRingtoneInfo picker
-//        ringtonePickerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-//                startActivityForResult(intent, RINGTONE_REQUEST_CODE);
-//            }
-//        });
-
         // show old data
         tvTask.setText(alarm.getQuestion()); //show task
         if(alarm.getQuestion().equals(getString(R.string.default_question)))
@@ -249,8 +238,7 @@ public class SetAlarmActivity extends AppCompatActivity{
         else if(alarm.getQuestion().equals(getString(R.string.math_question)))
             imageTask.setImageResource(R.drawable.ic_math);
         else if(alarm.getQuestion().equals(getString(R.string.recaptcha_question)))
-            imageTask.setImageResource(R.drawable.phone_shake);
-
+            imageTask.setImageResource(R.drawable.ic_recaptcha);
 
         timePicker.setHour(Integer.parseInt(alarm.getAlarmTime().split(":")[0])); //show alarm time
         timePicker.setMinute(Integer.parseInt(alarm.getAlarmTime().split(":")[1])); //
@@ -285,14 +273,14 @@ public class SetAlarmActivity extends AppCompatActivity{
                     }
                     break;
                 }
-                case MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE: {
+                case AlarmListActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE: {
                     alarm.setQuestion(getString(R.string.qr_question));
                     alarm.setAnswer(data.getStringExtra("code"));
                     tvTask.setText(alarm.getQuestion());
                     imageTask.setImageResource(R.mipmap.qrcode_alarme);
                     break;
                 }
-                case MainActivity.CHOOSE_TASK_REQUEST_CODE:{
+                case AlarmListActivity.CHOOSE_TASK_REQUEST_CODE:{
                     taskSelected(data.getExtras().getString("task"));
                     tvTask.setText(alarm.getQuestion());
                 }
@@ -303,12 +291,12 @@ public class SetAlarmActivity extends AppCompatActivity{
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode== MainActivity.CAMERA_PERMISSION_REQUEST_CODE) {
+        if (requestCode== AlarmListActivity.CAMERA_PERMISSION_REQUEST_CODE) {
             // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(this, QRscanActivity.class);
                 intent.putExtra("isSettingNewAlarm", true);
-                startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+                startActivityForResult(intent, AlarmListActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
             } else {
                 // permission denied, boo! Disable the
                 // functionality that depends on this permission.
@@ -327,12 +315,12 @@ public class SetAlarmActivity extends AppCompatActivity{
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 System.out.println("permission!!");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
-                        MainActivity.CAMERA_PERMISSION_REQUEST_CODE);
+                        AlarmListActivity.CAMERA_PERMISSION_REQUEST_CODE);
             }
             else {
                 Intent intent = new Intent(this, QRscanActivity.class);
                 intent.putExtra("isSettingNewAlarm", true);
-                startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+                startActivityForResult(intent, AlarmListActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
             }
         }
         else if (selected.equals(getString(R.string.math_question))) { //continue here
@@ -343,7 +331,7 @@ public class SetAlarmActivity extends AppCompatActivity{
         else if (selected.equals(getString(R.string.recaptcha_question))) {
             alarm.setQuestion(selected);
             alarm.setAnswer("default");
-            imageTask.setImageResource(R.drawable.phone_shake);
+            imageTask.setImageResource(R.drawable.ic_recaptcha);
         }
     }
 
@@ -373,7 +361,7 @@ public class SetAlarmActivity extends AppCompatActivity{
 
     public void chooseTaskClick(View view) {
         Intent intent = new Intent(this, ChooseTaskActivity.class);
-        startActivityForResult(intent, MainActivity.CHOOSE_TASK_REQUEST_CODE);
+        startActivityForResult(intent, AlarmListActivity.CHOOSE_TASK_REQUEST_CODE);
     }
 
     public void labelClick(View view) {
@@ -405,9 +393,12 @@ public class SetAlarmActivity extends AppCompatActivity{
     }
 
     public void chooseRingtoneClick(View view) {
-        System.out.println("choosing ringtone !!");
         Intent intent = new Intent(SetAlarmActivity.this, SearchSongActivity.class);
         startActivityForResult(intent, SPOTIFY_REQUEST_CODE);
+
+//        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+//        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+//        startActivityForResult(intent, RINGTONE_REQUEST_CODE);
     }
 
     public void saveAlarmClick(View view) {
@@ -421,7 +412,7 @@ public class SetAlarmActivity extends AppCompatActivity{
             calendar.add(Calendar.DATE, 1);
             Toast.makeText(SetAlarmActivity.this, "Delay for 1 day", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(SetAlarmActivity.this, "Alarm is set for " + alarm.getAlarmTime(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetAlarmActivity.this, "Alarm is set for " + timePicker.getHour()+":"+timePicker.getMinute(), Toast.LENGTH_SHORT).show();
         }
 
         alarm.setAlarmTime(timePicker.getHour()+":"+timePicker.getMinute());
@@ -527,7 +518,7 @@ public class SetAlarmActivity extends AppCompatActivity{
 //                    }
 //                    @Override
 //                    public void onError() {
-//                        Log.e("MainActivity", "Error setting image using Picasso");
+//                        Log.e("AlarmListActivity", "Error setting image using Picasso");
 //                    }
 //                });
 //    }

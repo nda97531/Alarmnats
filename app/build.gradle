@@ -59,4 +59,5 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.jakewharton:butterknife:7.0.1'
     annotationProcessor 'com.jakewharton:butterknife:7.0.1'
+    implementation 'android.arch.lifecycle:common:1.1.1'
 }

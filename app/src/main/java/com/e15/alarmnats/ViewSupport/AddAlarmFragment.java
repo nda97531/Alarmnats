@@ -187,7 +187,7 @@ public class AddAlarmFragment extends Fragment implements Response.Listener<Stri
                 try {
                     alarmItem.jsonify(); // updates json in alarmItem
                 } catch (JSONException e) {
-                    Log.e("MainActivity", "error converting into json");
+                    Log.e("AlarmListActivity", "error converting into json");
                     e.printStackTrace();
                 }
 
@@ -287,8 +287,8 @@ public class AddAlarmFragment extends Fragment implements Response.Listener<Stri
         SharedPreferences prefs = getContext().getSharedPreferences(getString(R.string.tag_sharedprefs), Context.MODE_PRIVATE);
         String token = prefs.getString(getString(R.string.tag_sharedpref_token), "");
 
-        Log.d("MainActivity", "url: " + url);
-        Log.d("MainActivity", "token: " + token);
+        Log.d("AlarmListActivity", "url: " + url);
+        Log.d("AlarmListActivity", "token: " + token);
 
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
@@ -428,7 +428,7 @@ public class AddAlarmFragment extends Fragment implements Response.Listener<Stri
 
                     @Override
                     public void onError() {
-                        Log.e("MainActivity", "Error setting image using Picasso");
+                        Log.e("AlarmListActivity", "Error setting image using Picasso");
                     }
                 });
     }
@@ -461,7 +461,7 @@ public class AddAlarmFragment extends Fragment implements Response.Listener<Stri
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e("MainActivity", error.toString());
+        Log.e("AlarmListActivity", error.toString());
 //        Toast.makeText(, "Lỗi mạng!", Toast.LENGTH_SHORT).show();
 
     }
@@ -508,7 +508,7 @@ public class AddAlarmFragment extends Fragment implements Response.Listener<Stri
             try {
                 alarmItem.jsonify(); // updates json in alarmItem
             } catch (JSONException e) {
-                Log.e("MainActivity", "error converting into json");
+                Log.e("AlarmListActivity", "error converting into json");
                 e.printStackTrace();
             }
         }

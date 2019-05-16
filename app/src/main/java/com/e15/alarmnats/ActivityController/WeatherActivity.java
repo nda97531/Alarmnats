@@ -5,12 +5,12 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,8 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.e15.alarmnats.Function;
-import android.support.v7.app.ActionBar;
-
 import com.e15.alarmnats.R;
 
 import org.json.JSONException;
@@ -29,7 +27,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends Fragment {
 
     TextView selectCity, cityField, detailsField, currentTemperatureField, humidity_field, pressure_field, weatherIcon, updatedField;
     ProgressBar loader;
@@ -39,23 +37,27 @@ public class WeatherActivity extends AppCompatActivity {
     String OPEN_WEATHER_MAP_API = "8f0353b63a295dc141a142ef7cb3f4ed";
     /* Please Put your API KEY here */
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_weather, container, false);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        System.out.println("create weather!!");
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_weather);
+//        ((FragmentActivity)getActivity()).getSupportActionBar().hide();
 
-        loader = (ProgressBar) findViewById(R.id.loader);
-        selectCity = (TextView) findViewById(R.id.selectCity);
-        cityField = (TextView) findViewById(R.id.city_field);
-        updatedField = (TextView) findViewById(R.id.updated_field);
-        detailsField = (TextView) findViewById(R.id.details_field);
-        currentTemperatureField = (TextView) findViewById(R.id.current_temperature_field);
-        humidity_field = (TextView) findViewById(R.id.humidity_field);
-        pressure_field = (TextView) findViewById(R.id.pressure_field);
-        weatherIcon = (TextView) findViewById(R.id.weather_icon);
-        weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        loader = (ProgressBar) getView().findViewById(R.id.loader);
+        selectCity = (TextView) getView().findViewById(R.id.selectCity);
+        cityField = (TextView) getView().findViewById(R.id.city_field);
+        updatedField = (TextView) getView().findViewById(R.id.updated_field);
+        detailsField = (TextView) getView().findViewById(R.id.details_field);
+        currentTemperatureField = (TextView) getView().findViewById(R.id.current_temperature_field);
+        humidity_field = (TextView) getView().findViewById(R.id.humidity_field);
+        pressure_field = (TextView) getView().findViewById(R.id.pressure_field);
+        weatherIcon = (TextView) getView().findViewById(R.id.weather_icon);
+        weatherFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/weathericons-regular-webfont.ttf");
         weatherIcon.setTypeface(weatherFont);
 
         taskLoadUp(city);
@@ -63,9 +65,9 @@ public class WeatherActivity extends AppCompatActivity {
         selectCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(WeatherActivity.this);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Change City");
-                final EditText input = new EditText(WeatherActivity.this);
+                final EditText input = new EditText(getContext());
                 input.setText(city);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -94,11 +96,11 @@ public class WeatherActivity extends AppCompatActivity {
 
 
     public void taskLoadUp(String query) {
-        if (Function.isNetworkAvailable(getApplicationContext())) {
+        if (Function.isNetworkAvailable(getContext())) {
             DownloadWeather task = new DownloadWeather();
             task.execute(query);
         } else {
-            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -141,7 +143,7 @@ public class WeatherActivity extends AppCompatActivity {
 
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Error, Check City", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error, Check City", Toast.LENGTH_SHORT).show();
             }
 
 

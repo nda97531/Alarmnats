@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.R;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -60,7 +59,7 @@ public class AlarmFiredActivity extends AppCompatActivity
 
 //        dbHelper = AlarmDbHelper.getInstance(this);
 
-        ringtone = getIntent().getExtras().getString("tvRingtoneInfo");
+        ringtone = getIntent().getExtras().getString("ringtone");
 
         Log.d("fired", ringtone);
 
@@ -93,13 +92,13 @@ public class AlarmFiredActivity extends AppCompatActivity
             Intent intent = new Intent(this, QRscanActivity.class);
             intent.putExtra("isSettingNewAlarm", false);
             intent.putExtra("answer", answer);
-            startActivityForResult(intent, MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
+            startActivityForResult(intent, AlarmListActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else if (question.equals(getString(R.string.math_question))) {
             Intent intent = new Intent(this, MathTestActivity.class);
-            startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
+            startActivityForResult(intent, AlarmListActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else if (question.equals(getString(R.string.recaptcha_question))) {
             Intent intent = new Intent(this, RecaptchaActivity.class);
-            startActivityForResult(intent, MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
+            startActivityForResult(intent, AlarmListActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
         } else {
             // Default
             Button dismissBtn = (Button) findViewById(R.id.button_dismiss);
@@ -173,9 +172,9 @@ public class AlarmFiredActivity extends AppCompatActivity
 
                 }
             }
-            else if (requestCode == MainActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE
-                    || requestCode == MainActivity.MATH_TEST_INTENT_REQUEST_CODE
-                    || requestCode == MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE) {
+            else if (requestCode == AlarmListActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE
+                    || requestCode == AlarmListActivity.MATH_TEST_INTENT_REQUEST_CODE
+                    || requestCode == AlarmListActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE) {
                 finishActivity();
             }
         }

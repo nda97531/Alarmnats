@@ -15,6 +15,7 @@ public class ChooseTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_task);
+        setTitle("Choose Task");
         returnIntent= new Intent();
     }
 

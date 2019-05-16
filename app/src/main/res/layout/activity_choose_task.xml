@@ -83,11 +83,11 @@
                     android:id="@+id/tvShake"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableTop="@drawable/phone_shake"
+                    android:drawableTop="@drawable/ic_recaptcha"
                     android:gravity="center"
                     android:text="@string/recaptcha"
                     android:layout_marginTop="16dp"
-                    android:textSize="24sp"
+                    android:textSize="21sp"
                     android:textStyle="bold"
                     android:padding="8dp"/>
             </android.support.v7.widget.CardView>

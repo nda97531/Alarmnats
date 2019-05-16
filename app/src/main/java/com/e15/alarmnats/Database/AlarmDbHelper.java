@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
-import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.e15.alarmnats.Model.Alarm;
@@ -148,7 +146,8 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
 
     public static AlarmDbHelper getInstance(Context ctx) {
         if (mInstance == null) {
-            mInstance = new AlarmDbHelper(ctx.getApplicationContext());
+            mInstance = new AlarmDbHelper(ctx);
+            System.out.println("new instance!!");
         }
         return mInstance;
     }

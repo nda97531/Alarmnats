@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.e15.alarmnats.ActivityController.AlarmListActivity;
 import com.e15.alarmnats.MainActivity;
 import com.e15.alarmnats.R;
 
@@ -37,6 +38,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> mQuestions = new ArrayList<>();
     private ArrayList<Integer> mFlags = new ArrayList<>();
     private Context mContext;
+    private AlarmListActivity mFragment;
 
     public RecyclerViewAdapter(ArrayList<String> mAlarmTimes,
                                ArrayList<Long> mAlarmTimesInMillis,
@@ -46,7 +48,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                ArrayList<String> mLabels,
                                ArrayList<String> mQuestions,
                                ArrayList<Integer> mFlags,
-                               Context mContext) {
+                               Context mContext,
+                               AlarmListActivity mFragment) {
         this.mAlarmTimes = mAlarmTimes;
         this.mAlarmTimesInMillis = mAlarmTimesInMillis;
         this.mAlarmStatuses = mAlarmStatuses;
@@ -56,6 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mQuestions = mQuestions;
         this.mFlags = mFlags;
         this.mContext = mContext;
+        this.mFragment = mFragment;
     }
 
     @NonNull
@@ -85,7 +89,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 if (mContext instanceof MainActivity) {
                     Log.d("delete", "delete button clicked");
-                    ((MainActivity) mContext).deleteAlarm(mFlags.get(poisition), poisition);
+                    mFragment.deleteAlarm(mFlags.get(poisition), poisition);
                 }
             }
         });
@@ -93,9 +97,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    ((MainActivity) mContext).enableExistingAlarm(mFlags.get(poisition));
+                    mFragment.enableExistingAlarm(mFlags.get(poisition));
                 } else {
-                    ((MainActivity) mContext).cancelAlarm(mFlags.get(poisition), true);// change status when switching on/off
+                    mFragment.cancelAlarm(mFlags.get(poisition), true);// change status when switching on/off
                 }
             }
         });
@@ -105,7 +109,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 if (mContext instanceof MainActivity) {
                     Log.d("edit", "edit button clicked");
-                    ((MainActivity) mContext).editAlarm(mFlags.get(poisition));
+                    mFragment.editAlarm(mFlags.get(poisition));
                 }
             }
         });
@@ -123,7 +127,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onRecAdapterActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("MyAdapter", "onRecAdapterActivityResult");
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
