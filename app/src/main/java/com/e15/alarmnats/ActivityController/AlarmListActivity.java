@@ -10,14 +10,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.e15.alarmnats.AlarmReceiver;
 import com.e15.alarmnats.Database.AlarmDbHelper;
@@ -36,7 +34,6 @@ public class AlarmListActivity extends Fragment{
 
     // variable declarations
     private FloatingActionButton addAlarmButton;
-    private Button weatherButton;
 
     private Alarm alarm;
     private AlarmDbHelper dbHelper;
@@ -71,9 +68,6 @@ public class AlarmListActivity extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         // Inflate the layout for this fragment
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        System.out.println("create alarm list!!");
-
         alarm = new Alarm();
         dbHelper = AlarmDbHelper.getInstance(getContext());
         // get all alarms from db
@@ -93,16 +87,6 @@ public class AlarmListActivity extends Fragment{
                 setAlarmIntent.putExtra("alarmObject", alarm);
                 setAlarmIntent.putExtra("isNewAlarm", true);
                 AlarmListActivity.this.startActivityForResult(setAlarmIntent, SET_ALARM_INTENT_REQUEST_CODE);
-            }
-        });
-
-        weatherButton = getView().findViewById(R.id.weatherButton);
-
-        weatherButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), WeatherActivity.class);
-                startActivity(intent);
             }
         });
     }

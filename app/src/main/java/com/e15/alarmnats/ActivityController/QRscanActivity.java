@@ -24,6 +24,7 @@ public class QRscanActivity extends AppCompatActivity {
     //    public static final String EXTRA_MESSAGE = "my message";
     SurfaceView surfaceView;
     TextView textView;
+    TextView label;
 
     CameraSource cameraSource;
     BarcodeDetector barcodeDetector;
@@ -35,6 +36,12 @@ public class QRscanActivity extends AppCompatActivity {
 
         surfaceView = (SurfaceView) findViewById(R.id.camerapreview);
         textView = (TextView) findViewById(R.id.textView);
+
+
+        if(!getIntent().getExtras().getBoolean("isSettingNewAlarm")) {
+            label = findViewById(R.id.qrMsg);
+            label.setText(getIntent().getExtras().getString("label"));
+        }
 
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
         cameraSource = new CameraSource.Builder(this, barcodeDetector)

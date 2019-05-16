@@ -30,7 +30,7 @@
         <item>@string/Choose_Storage_and_default</item>
         <item>@string/Search_from_spotify</item>
     </string-array>
-    <string name="title_activity_weather">WeatherActivity</string>
+    <string name="title_activity_weather">Weather</string>
     <string name="title_activity_function">Function</string>
     <string name="title_activity_display_search_song">DisplaySearchSong</string>
     <string name="tag_sharedprefs">com.e15.alarmnats</string>
@@ -52,4 +52,9 @@
     <string name="shake">Shake</string>
     <string name="recaptcha">Recaptcha</string>
     <string name="cancel">Cancel</string>
+    <string name="system_ringtone">System Ringtone</string>
+    <string name="spotify_ringtone">Spotify Ringtone</string>
+
+    <color name="switchOn">#f2f2f2</color>
+    <color name="switchOff">#d9d9d9</color>
 </resources>

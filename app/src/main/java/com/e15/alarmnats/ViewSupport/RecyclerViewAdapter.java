@@ -74,11 +74,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final int poisition = i;
 
-        viewHolder.alarmTime.setText(mAlarmTimes.get(i));
+        viewHolder.alarmTime.setText(
+                String.format("%02d:%02d",
+                Integer.parseInt(mAlarmTimes.get(i).split(":")[0]),
+                Integer.parseInt(mAlarmTimes.get(i).split(":")[1])) );
         viewHolder.alarmSwitch.setChecked(mAlarmStatuses.get(i));
         viewHolder.alarmLabel.setText(mLabels.get(i));
         viewHolder.dismisQuestion.setText(mQuestions.get(i));
-//        viewHolder.editAlarmButton.setText(mRingtoneNames.get(i));
+        if(mAlarmStatuses.get(i)) viewHolder.parentLayout.setBackgroundColor(mContext.getResources().getColor(R.color.switchOn));
+        else viewHolder.parentLayout.setBackgroundColor(mContext.getResources().getColor(R.color.switchOff));
 
         final long timeInMillis = mAlarmTimesInMillis.get(i);
         Uri ringtoneUri = Uri.parse(mRingtoneUris.get(i));
@@ -98,8 +102,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mFragment.enableExistingAlarm(mFlags.get(poisition));
+                    viewHolder.parentLayout.setBackgroundColor(mContext.getResources().getColor(R.color.switchOn));
                 } else {
                     mFragment.cancelAlarm(mFlags.get(poisition), true);// change status when switching on/off
+                    viewHolder.parentLayout.setBackgroundColor(mContext.getResources().getColor(R.color.switchOff));
                 }
             }
         });

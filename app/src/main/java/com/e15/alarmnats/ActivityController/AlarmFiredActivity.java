@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.e15.alarmnats.R;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -35,7 +36,7 @@ public class AlarmFiredActivity extends AppCompatActivity
 
     MediaPlayer mediaPlayer;
     private Player spotifyPlayer;
-    private String ringtone, question, answer;
+    private String ringtone, question, answer, label;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class AlarmFiredActivity extends AppCompatActivity
 
         question = getIntent().getExtras().getString("question");
         answer = getIntent().getExtras().getString("answer");
+        label = getIntent().getExtras().getString("label");
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
@@ -92,15 +94,21 @@ public class AlarmFiredActivity extends AppCompatActivity
             Intent intent = new Intent(this, QRscanActivity.class);
             intent.putExtra("isSettingNewAlarm", false);
             intent.putExtra("answer", answer);
+            intent.putExtra("label", label);
             startActivityForResult(intent, AlarmListActivity.SCAN_QR_CODE_INTENT_REQUEST_CODE);
         } else if (question.equals(getString(R.string.math_question))) {
             Intent intent = new Intent(this, MathTestActivity.class);
+            intent.putExtra("label", label);
             startActivityForResult(intent, AlarmListActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else if (question.equals(getString(R.string.recaptcha_question))) {
             Intent intent = new Intent(this, RecaptchaActivity.class);
+            intent.putExtra("label", label);
             startActivityForResult(intent, AlarmListActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
         } else {
             // Default
+            TextView textView = findViewById(R.id.defaultMsg);
+            textView.setText(label);
+
             Button dismissBtn = (Button) findViewById(R.id.button_dismiss);
             dismissBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -179,10 +187,6 @@ public class AlarmFiredActivity extends AppCompatActivity
             }
         }
         else startQuestion();
-    }
-
-    protected void onBtnDismissClick(View view) {
-        finishActivity();
     }
 
     private void finishActivity() {

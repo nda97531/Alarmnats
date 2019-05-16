@@ -44,7 +44,6 @@ public class WeatherActivity extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        System.out.println("create weather!!");
         super.onCreate(savedInstanceState);
 //        ((FragmentActivity)getActivity()).getSupportActionBar().hide();
 

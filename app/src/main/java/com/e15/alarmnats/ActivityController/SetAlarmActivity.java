@@ -67,9 +67,10 @@ public class SetAlarmActivity extends AppCompatActivity{
     private PendingIntent pendingIntent;
 
     private static final int RINGTONE_REQUEST_CODE = 1;
+    private static final int SPOTIFY_REQUEST_CODE = 2;
+    private static final int RINGTONE_TYPE_REQUEST_CODE = 3;
 
     private Alarm alarm;
-    private static final int SPOTIFY_REQUEST_CODE = 2;
 
     @Bind(R.id.chooseTask)
     LinearLayout chooseTask;
@@ -100,7 +101,7 @@ public class SetAlarmActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_activity_set_alarm);
+        setContentView(R.layout.activity_set_alarm);
         ButterKnife.bind(this);
         setTitle("Set Alarm");
 
@@ -259,7 +260,21 @@ public class SetAlarmActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             switch(requestCode){
+                case RINGTONE_TYPE_REQUEST_CODE:{
+                    if(data.getExtras().getString("ringtoneType").equals("spotify")) {
+                        Intent intent = new Intent(SetAlarmActivity.this, SearchSongActivity.class);
+                        startActivityForResult(intent, SPOTIFY_REQUEST_CODE);
+                    }
+                    else if(data.getExtras().getString("ringtoneType").equals("system")) {
+                        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+                        startActivityForResult(intent, RINGTONE_REQUEST_CODE);
+                        System.out.println("start here");
+                    }
+                    break;
+                }
                 case RINGTONE_REQUEST_CODE: {
+                    System.out.println("to here");
                     ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                     setRingtone(ringtoneUri);
                     break;
@@ -339,12 +354,13 @@ public class SetAlarmActivity extends AppCompatActivity{
     private void setRingtone(Uri uri) {
         Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
         ringtoneName = ringtone.getTitle(this);
+        ringtoneUri = uri;
 
         tvRingtoneInfo.setText(ringtoneName);
 
         receiverIntent.putExtra("ringtoneUri", ringtoneUri.toString());
 
-        alarm.setRingtoneUri(uri.toString());
+        alarm.setRingtoneUri(ringtoneUri.toString());
         alarm.setRingtoneName(ringtoneName);
     }
 
@@ -393,12 +409,8 @@ public class SetAlarmActivity extends AppCompatActivity{
     }
 
     public void chooseRingtoneClick(View view) {
-        Intent intent = new Intent(SetAlarmActivity.this, SearchSongActivity.class);
-        startActivityForResult(intent, SPOTIFY_REQUEST_CODE);
-
-//        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-//        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-//        startActivityForResult(intent, RINGTONE_REQUEST_CODE);
+        Intent intent= new Intent(this, ChooseRingToneActivity.class);
+        startActivityForResult(intent, RINGTONE_TYPE_REQUEST_CODE);
     }
 
     public void saveAlarmClick(View view) {
@@ -425,6 +437,7 @@ public class SetAlarmActivity extends AppCompatActivity{
         receiverIntent.putExtra("question", alarm.getQuestion());
         receiverIntent.putExtra("answer", alarm.getAnswer());
         receiverIntent.putExtra("alarmTime", alarm.getAlarmTime());
+        receiverIntent.putExtra("label", alarm.getLabel());
 
         this.pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), alarm.getFlag(),
                 receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);

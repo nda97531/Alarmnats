@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class MathTestActivity extends AppCompatActivity {
     EditText math_answer;
-    TextView math_question;
+    TextView math_question, mathMsg;
     Button button;
     int x = 0, y = 0, z = 0;
 
@@ -28,6 +28,9 @@ public class MathTestActivity extends AppCompatActivity {
         math_answer = findViewById(R.id.math_answer);
         math_question = findViewById(R.id.math_question);
         button = findViewById(R.id.button);
+        mathMsg = findViewById(R.id.mathMsg);
+
+        mathMsg.setText(getIntent().getExtras().getString("label"));
 
         Random randomGenerator = new Random();
         x = randomGenerator.nextInt(500) + 100;
