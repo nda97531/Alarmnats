@@ -60,7 +60,7 @@ public class AlarmFiredActivity extends AppCompatActivity
 
 //        dbHelper = AlarmDbHelper.getInstance(this);
 
-        ringtone = getIntent().getExtras().getString("ringtone");
+        ringtone = getIntent().getExtras().getString("tvRingtoneInfo");
 
         Log.d("fired", ringtone);
 
@@ -97,7 +97,7 @@ public class AlarmFiredActivity extends AppCompatActivity
         } else if (question.equals(getString(R.string.math_question))) {
             Intent intent = new Intent(this, MathTestActivity.class);
             startActivityForResult(intent, MainActivity.MATH_TEST_INTENT_REQUEST_CODE);
-        } else if (question.equals(getString(R.string.verify_recaptcha))) {
+        } else if (question.equals(getString(R.string.recaptcha_question))) {
             Intent intent = new Intent(this, RecaptchaActivity.class);
             startActivityForResult(intent, MainActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
         } else {

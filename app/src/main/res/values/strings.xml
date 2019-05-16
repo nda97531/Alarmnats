@@ -17,12 +17,12 @@
     <string name="choose_ringtone">Choose ringtone</string>
     <string name="label">Label</string>
     <string name="set_alarm">Set Alarm</string>
-    <string name="verify_recaptcha">Verify reCaptcha</string>
+    <string name="recaptcha_question">Verify reCaptcha</string>
     <string-array name="question_list">
         <item>@string/default_question</item>
         <item>@string/qr_question</item>
         <item>@string/math_question</item>
-        <item>@string/verify_recaptcha</item>
+        <item>@string/recaptcha_question</item>
     </string-array>
     <string name="Choose_Storage_and_default">Default</string>
     <string name="Search_from_spotify">Search from spotify</string>
@@ -36,4 +36,20 @@
     <string name="tag_sharedprefs">com.e15.alarmnats</string>
     <string name="tag_sharedpref_token">com.e15.alarmnats.token</string>
     <string name="choose_song">Choose Song</string>
+
+    <string name="ic_alarm">ic_alarm</string>
+    <string name="choose_task">Choose task</string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <string name="default_">Default</string>
+    <string name="repeat">Repeat</string>
+    <string name="never">Never</string>
+    <string name="alarm">Alarm</string>
+    <string name="ringtone">Ringtone</string>
+    <string name="delete_alarm">Delete Alarm</string>
+    <string name="save_alarm">Save Alarm</string>
+    <string name="qr_code">QR Code</string>
+    <string name="math_problems">Math</string>
+    <string name="shake">Shake</string>
+    <string name="recaptcha">Recaptcha</string>
+    <string name="cancel">Cancel</string>
 </resources>

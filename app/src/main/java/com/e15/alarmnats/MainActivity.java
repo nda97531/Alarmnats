@@ -17,14 +17,16 @@ import android.widget.Button;
 
 import com.e15.alarmnats.ActivityController.SetAlarmActivity;
 import com.e15.alarmnats.ActivityController.WeatherActivity;
-import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.Database.AlarmDbHelper;
+import com.e15.alarmnats.Model.Alarm;
 import com.e15.alarmnats.ViewSupport.RecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+//import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int VERIFY_CAPTCHA_INTENT_REQUEST_CODE = 201;
     public static final int EDIT_ALARM_INTENT_REQUEST_CODE = 300;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 301;
+    public static final int CHOOSE_TASK_REQUEST_CODE = 400;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

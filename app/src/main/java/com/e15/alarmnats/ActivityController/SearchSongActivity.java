@@ -9,12 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.e15.alarmnats.Model.AlarmItem;
 import com.e15.alarmnats.R;
-import com.e15.alarmnats.ViewSupport.AddFragment;
+import com.e15.alarmnats.ViewSupport.AddAlarmFragment;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
-public class SearchSongActivity extends AppCompatActivity implements AddFragment.AddFragmentListener {
+public class SearchSongActivity extends AppCompatActivity implements AddAlarmFragment.AddFragmentListener {
     private static final int CONTENT_VIEW_ID = 10101010;
 
     private static final int REQUEST_CODE = 1337;
@@ -64,7 +64,7 @@ public class SearchSongActivity extends AppCompatActivity implements AddFragment
         setContentView(R.layout.activity_search_song);
         authSpotify();
 
-        AddFragment addFragment = new AddFragment();
+        AddAlarmFragment addFragment = new AddAlarmFragment();
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, addFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

@@ -55,9 +55,9 @@ import java.util.List;
 import java.util.Map;
 
 
-public class AddFragment extends Fragment implements Response.Listener<String>, Response.ErrorListener {
+public class AddAlarmFragment extends Fragment implements Response.Listener<String>, Response.ErrorListener {
 
-    private static final String TAG = "AddFragment";
+    private static final String TAG = "AddAlarmFragment";
     private boolean editing;
 
     private RelativeLayout background;
@@ -99,7 +99,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_add, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_alarm, container, false);
         initUI(view);
 
         return view;
@@ -124,7 +124,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
                     listener.saveClicked(alarmItem);
                 }
 
-                AddFragment.this.exitFragment();
+                AddAlarmFragment.this.exitFragment();
             }
         });
 
@@ -193,11 +193,11 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
 
                 // updates UI
                 trackField.setText(alarmItem.getArtist() + " - " + alarmItem.getName());
-                AddFragment.this.updateAlbumArt(alarmItem.getImageUrl());
+                AddAlarmFragment.this.updateAlbumArt(alarmItem.getImageUrl());
                 preview.setVisibility(View.VISIBLE);
 
                 // hides keybaord
-                AddFragment.this.hideKeyboard();
+                AddAlarmFragment.this.hideKeyboard();
 
             }
         });
@@ -213,8 +213,8 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
                     itemClicked = true;
 
                     // Perform search on enter press
-                    AddFragment.this.searchTrack(trackField.getText().toString().replaceAll(" ", "+"));
-                    AddFragment.this.hideKeyboard();
+                    AddAlarmFragment.this.searchTrack(trackField.getText().toString().replaceAll(" ", "+"));
+                    AddAlarmFragment.this.hideKeyboard();
 
                     return true;
                 }
@@ -254,7 +254,7 @@ public class AddFragment extends Fragment implements Response.Listener<String>, 
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        AddFragment.this.setTrackFromTitle(response);
+                        AddAlarmFragment.this.setTrackFromTitle(response);
                     }
                 },
                 this) {

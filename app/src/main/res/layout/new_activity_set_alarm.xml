@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityController.SetAlarmActivity">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewTask"
+                android:layout_width="350dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:onClick="chooseTaskClick">
+
+                    <ImageView
+                        android:id="@+id/imageTask"
+                        android:layout_width="64dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/ic_alarm"
+                        android:paddingStart="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="0dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="8dp"
+                        app:srcCompat="@drawable/baseline_alarm_black_48" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:id="@+id/chooseTask">
+
+                        <TextView
+                            android:id="@+id/tvChooseTask"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/choose_task"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvTask"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/choose_task"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        app:srcCompat="@drawable/baseline_more_vert_black_48" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewTime"
+                android:layout_width="350dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardViewTask">
+
+                <TimePicker
+                    android:id="@+id/timePicker"
+                    android:layout_width="300dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:timePickerMode="spinner"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.49"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+            </android.support.v7.widget.CardView>
+
+            <!--<android.support.v7.widget.CardView-->
+                <!--android:id="@+id/cardViewRepeat"-->
+                <!--android:layout_width="350dp"-->
+                <!--android:layout_height="56dp"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginEnd="8dp"-->
+                <!--app:cardCornerRadius="10dp"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.48"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/cardViewTime">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tvRepeat"-->
+                    <!--android:layout_width="92dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="start"-->
+                    <!--android:layout_marginStart="16dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text="@string/repeat"-->
+                    <!--android:textSize="24sp"-->
+                    <!--android:textStyle="bold" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tvRepeatInfo"-->
+                    <!--android:layout_width="100dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="end"-->
+                    <!--android:layout_marginEnd="16dp"-->
+                    <!--android:gravity="end|center_vertical"-->
+                    <!--android:text="@string/never"-->
+                    <!--android:textSize="24sp" />-->
+            <!--</android.support.v7.widget.CardView>-->
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewLabel"
+                android:layout_width="350dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="labelClick"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardViewTime">
+
+                <TextView
+                    android:id="@+id/tvLabel"
+                    android:layout_width="92dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="16dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLabelInfo"
+                    android:layout_width="222dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="end|center_vertical"
+                    android:text="@string/alarm"
+                    android:textSize="16sp"
+                    android:textAlignment="viewEnd"/>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewRingtone"
+                android:layout_width="350dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="chooseRingtoneClick"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardViewLabel">
+
+
+                <TextView
+                    android:id="@+id/tvRingtone"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="16dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/ringtone"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvRingtoneInfo"
+                    android:layout_width="214dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="end|center_vertical"
+                    android:text="@string/default_"
+                    android:textSize="16sp"
+                    android:textAlignment="viewEnd"/>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewSave"
+                android:layout_width="350dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="saveAlarmClick"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardViewRingtone">
+
+                <TextView
+                    android:id="@+id/tvSave"
+                    android:layout_width="175dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/save_alarm"
+                    android:textSize="24sp" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewCancel"
+                android:layout_width="350dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="cancelClick"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardViewSave" >
+
+                <TextView
+                    android:id="@+id/tvCancel"
+                    android:layout_width="175dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textSize="24sp"/>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

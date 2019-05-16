@@ -15,13 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityController.RecaptchaActivity"></activity>
-        <activity android:name=".ActivityController.SetAlarmActivity" />
+
+        <activity android:name=".ActivityController.ChooseTaskActivity" android:parentActivityName=".ActivityController.SetAlarmActivity"></activity>
+        <activity android:name=".ActivityController.RecaptchaActivity" />
+        <activity android:name=".ActivityController.SetAlarmActivity" android:parentActivityName=".MainActivity"/>
         <activity
-            android:permission="android.permission.INTERNET"
             android:name=".ActivityController.SearchSongActivity"
             android:label="@string/title_activity_display_search_song"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:permission="android.permission.INTERNET"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ActivityController.WeatherActivity"
             android:allowBackup="true"
@@ -42,15 +44,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!--<activity-->
-            <!--android:name=".ActivityController.WeatherActivity"-->
-            <!--android:parentActivityName=".MainActivity" />-->
-
+        </activity> <!-- <activity -->
+        <!-- android:name=".ActivityController.WeatherActivity" -->
+        <!-- android:parentActivityName=".MainActivity" /> -->
         <!-- Needed for LoginActivity to work -->
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
