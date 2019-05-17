@@ -10,7 +10,7 @@ import com.e15.alarmnats.ActivityController.AlarmListActivity;
 import com.e15.alarmnats.ActivityController.WeatherActivity;
 import com.e15.alarmnats.ViewSupport.MyPagerAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     ImageView alarm_function, weather_function;
 
     @Override
