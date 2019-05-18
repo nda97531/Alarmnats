@@ -120,7 +120,7 @@ public class WeatherActivity extends Fragment {
         
         @Override
         protected void onPostExecute(String xml) {
-
+            if(xml == null) return;
             try {
                 JSONObject json = new JSONObject(xml);
                 if (json != null) {

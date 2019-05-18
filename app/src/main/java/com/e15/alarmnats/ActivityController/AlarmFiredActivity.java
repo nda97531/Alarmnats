@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.e15.alarmnats.R;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -23,6 +27,8 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
+
+import java.net.InetAddress;
 
 public class AlarmFiredActivity extends AppCompatActivity
         implements ConnectionStateCallback, PlayerNotificationCallback {
@@ -37,6 +43,7 @@ public class AlarmFiredActivity extends AppCompatActivity
     MediaPlayer mediaPlayer;
     private Player spotifyPlayer;
     private String ringtone, question, answer, label;
+    Uri ringtoneUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,28 +72,46 @@ public class AlarmFiredActivity extends AppCompatActivity
 
         Log.d("fired", ringtone);
 
-        Uri ringtoneUri = Uri.parse(ringtone);
+        ringtoneUri = Uri.parse(ringtone);
         if (ringtone.split(":")[0].equals("spotify")) {
-            System.out.println("soundtrack on spotify");
-            authSpotify();
+            checkAvailable("spotify.com");
         } else {
-            mediaPlayer = new MediaPlayer();
-            try {
-                mediaPlayer.setDataSource(this, ringtoneUri);
-                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mediaPlayer.setLooping(true);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                }
-
-                startQuestion();
-
-            } catch (Exception e) {
-                Log.e("media exception", e.toString());
-            }
+            systemRing();
         }
+    }
+
+    private void systemRing(){
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(this, ringtoneUri);
+            final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mediaPlayer.setLooping(true);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            }
+
+            startQuestion();
+
+        } catch (Exception e) {
+            Log.e("media exception", e.toString());
+        }
+    }
+
+    private void checkAvailable(final String url){
+        final Task checkIntenet = new Task();
+        checkIntenet.execute(url);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run() {
+                if ( checkIntenet.getStatus() == AsyncTask.Status.RUNNING )
+                    checkIntenet.onPostExecute(url+"_no");
+            }
+        }, 1000 );
     }
 
     private void startQuestion(){
@@ -101,9 +126,7 @@ public class AlarmFiredActivity extends AppCompatActivity
             intent.putExtra("label", label);
             startActivityForResult(intent, AlarmListActivity.MATH_TEST_INTENT_REQUEST_CODE);
         } else if (question.equals(getString(R.string.recaptcha_question))) {
-            Intent intent = new Intent(this, RecaptchaActivity.class);
-            intent.putExtra("label", label);
-            startActivityForResult(intent, AlarmListActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
+            checkAvailable("google.com");
         } else {
             // Default
             TextView textView = findViewById(R.id.defaultMsg);
@@ -164,16 +187,6 @@ public class AlarmFiredActivity extends AppCompatActivity
                         @Override
                         public void onError(Throwable throwable) {
                             Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
-
-                            // saves error logs for debugging
-//                            SharedPreferences debugPrefs =
-//                                    AlarmFiredActivity.this.getSharedPreferences(TAG, Context.MODE_PRIVATE);
-//                            debugPrefs.edit()
-//                                    .putString(getString(R.string.tag_debug_onError), throwable.getMessage())
-//                                    .apply();
-
-
-                            // Retries to auth Spotify
                             authSpotify();
                         }
                     });
@@ -237,5 +250,66 @@ public class AlarmFiredActivity extends AppCompatActivity
     @Override
     public void onPlaybackError(ErrorType errorType, String s) {
 
+    }
+
+    public class Task extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            System.out.println("start my task");
+            String result;
+            try {
+                InetAddress ipAddr = InetAddress.getByName(params[0]);
+                if (!ipAddr.equals("")) {
+                    result = params[0]+"_yes";
+                } else {
+                    result = params[0]+"_no";
+                }
+            } catch (Exception e) {
+                result = params[0]+"_no";
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            switch (result){
+                case "spotify.com_yes":{
+                    System.out.println("yes spotify");
+                    authSpotify();
+                    break;
+                }
+                case "spotify.com_no":{
+                    System.out.println("no spotify");
+                    ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                    systemRing();
+                    break;
+                }
+                case "google.com_yes":{
+                    System.out.println("yes google");
+                    Intent intent = new Intent(AlarmFiredActivity.this, RecaptchaActivity.class);
+                    intent.putExtra("label", label);
+                    startActivityForResult(intent, AlarmListActivity.VERIFY_CAPTCHA_INTENT_REQUEST_CODE);
+                    break;
+                }
+                case "google.com_no":{
+                    System.out.println("no google");
+                    // Default
+                    TextView textView = findViewById(R.id.defaultMsg);
+                    textView.setText(label);
+
+                    Button dismissBtn = (Button) findViewById(R.id.button_dismiss);
+                    dismissBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finishActivity();
+                        }
+                    });
+                    break;
+                }
+                default:{
+                    throw new NumberFormatException();
+                }
+            }
+        }
     }
 }
